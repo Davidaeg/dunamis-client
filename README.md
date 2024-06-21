@@ -27,9 +27,9 @@ yarn
 
 4. Create a .env file and copy the content of the .env.example an replace the data with your backend host and port info
 
-## Running Store Client
+## Running Dunamis Client
 
-To run Store Client in development mode, use the following command:
+To run Dunamis Client in development mode, use the following command:
 
 ```
 yarn dev
