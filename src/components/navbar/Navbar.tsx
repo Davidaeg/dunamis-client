@@ -14,6 +14,9 @@ export const Navbar = () => {
           <Link to="/users" className="px-4">
             UsersTemp
           </Link>
+          <Link to="/reservation" className="px-4">
+            Reservaciones
+          </Link>
         </div>
       </div>
     </nav>
