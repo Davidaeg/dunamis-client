@@ -7,13 +7,14 @@ export const Navbar = () => {
   const { user } = useContext(AuthenticationContext);
   return (
     <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex justify-between">
-        <div className="text-white">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="text-white flex">
           {appRoutes
             .filter((route) => user?.routes.includes(route.path))
             .map((route) => (
-              <Link to={`${user?.rootPath}${route.path}`} className="px-4">
-                {route.name}
+              <Link to={`${user?.rootPath}${route.path}`} className="flex items-center px-4">
+                {route.icon && <img src={route.icon} alt={route.name} className="h-6 w-6 mr-2" />}
+                <span>{route.name}</span>
               </Link>
             ))}
         </div>

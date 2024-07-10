@@ -6,24 +6,24 @@ import { useSignin } from "../../hooks/auth/useSignIn.hook";
 //TEMPORARY USERS YOU'll have to comment/uncomment in order to change user profile to test, only one can be active.
 
 //GUEST USER
-const guestUser: User = {
-  id: 0,
-  rootPath: "",
-  routes: userRoutesMap[UserType.GUEST],
-  username: "Guest",
-  userType: UserType.GUEST,
-  defaultRoute: "/home",
-};
-
-//ADMIN USER
 // const guestUser: User = {
 //   id: 0,
-//   rootPath: "/admin",
-//   routes: userRoutesMap[UserType.ADMIN],
-//   username: "Admin",
-//   userType: UserType.ADMIN,
-//   defaultRoute: "/admin/userstemp",
+//   rootPath: "",
+//   routes: userRoutesMap[UserType.GUEST],
+//   username: "Guest",
+//   userType: UserType.GUEST,
+//   defaultRoute: "/home",
 // };
+
+//ADMIN USER
+const guestUser: User = {
+  id: 0,
+  rootPath: "/admin",
+  routes: userRoutesMap[UserType.ADMIN],
+  username: "Admin",
+  userType: UserType.ADMIN,
+  defaultRoute: "/admin/userstemp",
+};
 
 //EMPLOYEE USER
 // const guestUser: User = {

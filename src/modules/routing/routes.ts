@@ -1,14 +1,18 @@
 import { Home } from "../home/Home";
 import { About } from "../about/About";
 import { RouteType } from "./routes.types";
-import { Reservation } from "../reservation/Reservation";
+import { Personas } from "../personas/Personas";
 import { Users } from "../users/Users";
+
+import homeIcon from "../../assets/homeIcon.svg";
+import PersonIcon from "../../assets/manage_accounts.svg";
 
 export const appRoutes: RouteType[] = [
   {
     path: "/home",
     name: "Inicio",
     component: Home,
+    icon: homeIcon,
     layout: "/",
   },
   {
@@ -18,14 +22,15 @@ export const appRoutes: RouteType[] = [
     layout: "/",
   },
   {
-    path: "/reservation",
-    name: "Reservación",
-    component: Reservation,
+    path: "/personas",
+    name: "Personas",
+    component: Personas,
+    icon: PersonIcon,
     layout: "/",
   },
   {
     path: "/userstemp",
-    name: "UsuariosTemp",
+    name: "Usuarios",
     icon: "pi pi-user",
     component: Users,
     layout: "/",
