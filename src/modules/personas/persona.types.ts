@@ -8,23 +8,3 @@ export interface PersonaDB {
   numeroCelular: string;
   email: string;
 }
-
-export type Person = {
-  rootPath: string;
-  routes: string[];
-  username: string;
-  id: number;
-  personType: PersonType;
-  defaultRoute?: string;
-};
-
-export enum PersonType {
-  ADMIN = "admin",
-  EMPLOYEE = "employee",
-  GUEST = "guest",
-}
-
-export type LoginForm = {
-  username: string;
-  password: string;
-};

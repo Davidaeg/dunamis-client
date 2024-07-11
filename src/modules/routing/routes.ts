@@ -4,15 +4,15 @@ import { RouteType } from "./routes.types";
 import { Personas } from "../personas/Personas";
 import { Users } from "../users/Users";
 
-import homeIcon from "../../assets/homeIcon.svg";
-import PersonIcon from "../../assets/manage_accounts.svg";
+import { Reservation } from "../reservation/Reservation";
+import { FaBook, FaHouse, FaPeopleLine, FaUsersGear } from "react-icons/fa6";
 
 export const appRoutes: RouteType[] = [
   {
     path: "/home",
     name: "Inicio",
     component: Home,
-    icon: homeIcon,
+    icon: FaHouse,
     layout: "/",
   },
   {
@@ -22,16 +22,23 @@ export const appRoutes: RouteType[] = [
     layout: "/",
   },
   {
+    path: "/reservation",
+    name: "Reservación",
+    component: Reservation,
+    icon: FaBook,
+    layout: "/",
+  },
+  {
     path: "/personas",
     name: "Personas",
     component: Personas,
-    icon: PersonIcon,
+    icon: FaPeopleLine,
     layout: "/",
   },
   {
     path: "/userstemp",
     name: "Usuarios",
-    icon: "pi pi-user",
+    icon: FaUsersGear,
     component: Users,
     layout: "/",
   },

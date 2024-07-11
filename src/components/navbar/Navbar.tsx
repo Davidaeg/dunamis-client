@@ -12,8 +12,11 @@ export const Navbar = () => {
           {appRoutes
             .filter((route) => user?.routes.includes(route.path))
             .map((route) => (
-              <Link to={`${user?.rootPath}${route.path}`} className="flex items-center px-4">
-                {route.icon && <img src={route.icon} alt={route.name} className="h-6 w-6 mr-2" />}
+              <Link
+                to={`${user?.rootPath}${route.path}`}
+                className="flex items-center px-4"
+              >
+                {route.icon && <route.icon className="h-6 w-6 mr-2" />}
                 <span>{route.name}</span>
               </Link>
             ))}
