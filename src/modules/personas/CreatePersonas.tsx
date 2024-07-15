@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
 import { PersonaDB } from "../../modules/personas/persona.types";
+import Swal from 'sweetalert2';
 
 const CreatePersona: React.FC = () => {
   const { createPersona } = useCreatePersona();
@@ -22,9 +23,14 @@ const CreatePersona: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
     try {
       await createPersona(newPersona);
-      alert("Persona creada exitosamente");
+      Swal.fire({
+        title: "¡Éxito!",
+        text: "Persona creada exitosamente",
+        icon: "success"
+      });
       setNewPersona({
         idPersona: "",
         nombre: "",
@@ -36,110 +42,137 @@ const CreatePersona: React.FC = () => {
         email: "",
       });
     } catch (error) {
-      alert("Error creando persona");
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un problema creando la persona",
+        icon: "error"
+      });
+      console.error("Error creando persona:", error);
     }
   };
 
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="mt-4">
-        <input
-          type="text"
-          name="idPersona"
-          value={newPersona.idPersona}
-          onChange={handleChange}
-          placeholder="ID Persona"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
+    <section className="dark:bg-gray-700">
+      <div className="py-8 px-4 mx-auto max-w-2xl">
+        <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Crear una nueva persona</h2>
+        <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+          <div className="sm:col-span-2">
+            <label htmlFor="idPersona" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Persona</label>
+            <input
+              type="text" 
+              id="idPersona"
+              name="idPersona"
+              value={newPersona.idPersona}
+              onChange={handleChange}
+              placeholder="ID Persona"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              value={newPersona.nombre}
+              onChange={handleChange}
+              placeholder="Nombre"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="apellido1" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido 1</label>
+            <input
+              type="text"
+              id="apellido1"
+              name="apellido1"
+              value={newPersona.apellido1}
+              onChange={handleChange}
+              placeholder="Apellido 1"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="apellido2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido 2</label>
+            <input
+              type="text"
+              id="apellido2"
+              name="apellido2"
+              value={newPersona.apellido2}
+              onChange={handleChange}
+              placeholder="Apellido 2"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="fechaNacimiento" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Nacimiento</label>
+            <input
+              type="date"
+              id="fechaNacimiento"
+              name="fechaNacimiento"
+              value={newPersona.fechaNacimiento}
+              onChange={handleChange}
+              placeholder="Fecha de Nacimiento"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="numeroTelefono" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Teléfono</label>
+            <input
+              type="text"
+              id="numeroTelefono"
+              name="numeroTelefono"
+              value={newPersona.numeroTelefono}
+              onChange={handleChange}
+              placeholder="Número de Teléfono"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="numeroCelular" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Celular</label>
+            <input
+              type="text"
+              id="numeroCelular"
+              name="numeroCelular"
+              value={newPersona.numeroCelular}
+              onChange={handleChange}
+              placeholder="Número de Celular"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={newPersona.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <button
+              type="submit"
+              className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 hover:bg-blue-400">
+              Crear Persona
+            </button>
+          </div>
+        </form>
       </div>
-      <div>
-        <input
-          type="text"
-          name="nombre"
-          value={newPersona.nombre}
-          onChange={handleChange}
-          placeholder="Nombre"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          name="apellido1"
-          value={newPersona.apellido1}
-          onChange={handleChange}
-          placeholder="Apellido 1"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          name="apellido2"
-          value={newPersona.apellido2}
-          onChange={handleChange}
-          placeholder="Apellido 2"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="date"
-          name="fechaNacimiento"
-          value={newPersona.fechaNacimiento}
-          onChange={handleChange}
-          placeholder="Fecha de Nacimiento"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          name="numeroTelefono"
-          value={newPersona.numeroTelefono}
-          onChange={handleChange}
-          placeholder="Número de Teléfono"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          name="numeroCelular"
-          value={newPersona.numeroCelular}
-          onChange={handleChange}
-          placeholder="Número de Celular"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="email"
-          name="email"
-          value={newPersona.email}
-          onChange={handleChange}
-          placeholder="Email"
-          className="block w-full border-b-2 border-gray-400 focus:outline-none focus:ring-2"
-          required
-        />
-      </div>
-      <div>
-        <button
-          type="submit"
-          className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded"
-        >
-          Crear Persona
-        </button>
-      </div>
-    </form>
+    </section>
   );
 };
 
 export default CreatePersona;
+
