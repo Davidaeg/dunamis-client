@@ -2,12 +2,124 @@ import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef } from "ag-grid-community";
 import { useGetPersonas } from "../../hooks/persona/useGetPersonas";
+import { useDeletePersonas } from "../../hooks/persona/useDeletePersonas";
+import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
+import { useUpdatePersonas } from "../../hooks/persona/useUpdatePersonas";
 import CreatePersona from "./CreatePersonas";
+import ActionButtons from "../../components/ActionButtons/ActionButtons";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import Swal from "sweetalert2";
+import Modal from "../../components/Modal/Modal";
+import UpdatePersonas from "./UpdatePersonas";
+import { PersonaDB } from "./persona.types";
 
 export const Personas = () => {
-  const { personas, loading, error } = useGetPersonas();
+  const { personas, loading, error, refetch } = useGetPersonas();
+  const { deletePersona } = useDeletePersonas();
+  const { createPersona } = useCreatePersona();
+  const { updatePersona } = useUpdatePersonas();
+
+  const [showModalCreate, setShowModalCreate] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState(null);
+
+  const handleCloseModalCreate = () => {
+    setShowModalCreate(false);
+  };
+
+  const handleCloseModalEdit = () => {
+    setShowModalEdit(false);
+    setSelectedPersona(null);
+  };
+
+  const handleShowModalCreate = () => setShowModalCreate(true);
+  const handleShowModalEdit = () => setShowModalEdit(true);
+
+  const handleEdit = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalEdit();
+  };
+
+  const handleDelete = (idPersona: string) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePersona(idPersona)
+          .then((success) => {
+            if (success) {
+              console.log("Persona eliminada");
+              Swal.fire(
+                "¡Eliminado!",
+                "La persona ha sido eliminada.",
+                "success"
+              );
+              refetch();
+            }
+          })
+          .catch((err: any) => {
+            console.error("Error al eliminar persona:", err);
+            Swal.fire(
+              "Error",
+              "Hubo un error al eliminar la persona.",
+              "error"
+            );
+          });
+      }
+    });
+  };
+
+  const handleCreate = (persona: PersonaDB) => {
+    createPersona(persona)
+      .then((newPersona) => {
+        console.log("Persona creada", newPersona);
+        Swal.fire(
+          "¡Creado!",
+          "La persona ha sido creada.",
+          "success"
+        );
+        refetch();
+        handleCloseModalCreate();
+      })
+      .catch((err: any) => {
+        console.error("Error al crear persona:", err);
+        Swal.fire(
+          "Error",
+          "Hubo un error al crear la persona.",
+          "error"
+        );
+      });
+  };
+
+  const handleUpdate = (idPersona: string, persona: PersonaDB) => {
+    updatePersona(idPersona, persona)
+      .then((updatedPersona) => {
+        console.log("Persona actualizada", updatedPersona);
+        Swal.fire(
+          "¡Actualizado!",
+          "La persona ha sido actualizada.",
+          "success"
+        );
+        refetch();
+        handleCloseModalEdit();
+      })
+      .catch((err: any) => {
+        console.error("Error al actualizar persona:", err);
+        Swal.fire(
+          "Error",
+          "Hubo un error al actualizar la persona.",
+          "error"
+        );
+      });
+  };
 
   const columns: ColDef[] = [
     { headerName: "ID", field: "idPersona" },
@@ -18,12 +130,17 @@ export const Personas = () => {
     { headerName: "Numero Telefono", field: "numeroTelefono" },
     { headerName: "Numero Celular", field: "numeroCelular" },
     { headerName: "Email", field: "email" },
+    {
+      headerName: "Acciones",
+      field: "acciones",
+      cellRenderer: (params: any) => (
+        <ActionButtons
+          onEdit={() => handleEdit(params.data)}
+          onDelete={() => handleDelete(params.data.idPersona)}
+        />
+      ),
+    },
   ];
-
-  const [showModal, setShowModal] = useState(false);
-
-  const handleCloseModal = () => setShowModal(false);
-  const handleShowModal = () => setShowModal(true);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -35,6 +152,20 @@ export const Personas = () => {
 
   return (
     <div>
+      <div className="bg-white dark:bg-gray-200 relative shadow-md overflow-hidden">
+        <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+          <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+            <button
+              onClick={handleShowModalCreate}
+              type="button"
+              className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded"
+            >
+              Agregar Persona
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="ag-theme-alpine" style={{ height: 600, width: "100%" }}>
         <AgGridReact
           rowData={personas}
@@ -43,45 +174,16 @@ export const Personas = () => {
         />
       </div>
 
-      <button
-        onClick={handleShowModal}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-      >
-        Agregar Persona
-      </button>
-
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto">
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity" onClick={handleCloseModal}></div>
-          <div className="relative bg-white rounded-lg border-2 shadow-lg max-w-lg w-full mx-auto p-6">
-            <CreatePersona />
-
-            <button
-              onClick={handleCloseModal}
-              className="absolute top-0 right-0 mt-4 mr-4 text-gray-600 hover:text-gray-800"
-            >
-              <svg
-                className="h-6 w-6 fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M3.293 3.293a1 1 0 011.414 0L10 8.586l5.293-5.293a1 1 0 111.414 1.414L11.414 10l5.293 5.293a1 1 0 01-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 01-1.414-1.414L8.586 10 3.293 4.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
+      <Modal isOpen={showModalCreate} onClose={handleCloseModalCreate}>
+        <CreatePersona onCreate={handleCreate} />
+      </Modal>
+      <Modal isOpen={showModalEdit} onClose={handleCloseModalEdit}>
+        <UpdatePersonas persona={selectedPersona} onUpdate={handleUpdate} />
+      </Modal>
     </div>
   );
 };
 
 export default Personas;
-
-
-
 
 

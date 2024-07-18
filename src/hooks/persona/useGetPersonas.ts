@@ -7,20 +7,22 @@ export const useGetPersonas = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPersonas = async () => {
-      try {
-        const response = await dunamisApi.get<PersonaDB[]>("/personas");
-        setPersonas(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError("Error fetching user data");
-        setLoading(false);
-      }
-    };
+  const fetchPersonas = async () => {
+    setLoading(true);
+    try {
+      const response = await dunamisApi.get<PersonaDB[]>("/personas");
+      setPersonas(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError("Error fetching user data");
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPersonas();
   }, []);
 
-  return { personas, loading, error };
+  return { personas, loading, error, refetch: fetchPersonas };
 };
+
