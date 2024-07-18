@@ -1,10 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
 import { PersonaDB } from "../../modules/personas/persona.types";
-import Swal from 'sweetalert2';
 
-const CreatePersona: React.FC = () => {
-  const { createPersona } = useCreatePersona();
+interface CreatePersonaProps {
+  onCreate: (persona: PersonaDB) => void;
+}
+
+const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
   const [newPersona, setNewPersona] = useState<PersonaDB>({
     idPersona: "",
     nombre: "",
@@ -23,14 +24,9 @@ const CreatePersona: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      await createPersona(newPersona);
-      Swal.fire({
-        title: "¡Éxito!",
-        text: "Persona creada exitosamente",
-        icon: "success"
-      });
+      onCreate(newPersona);
       setNewPersona({
         idPersona: "",
         nombre: "",
@@ -42,15 +38,9 @@ const CreatePersona: React.FC = () => {
         email: "",
       });
     } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: "Hubo un problema creando la persona",
-        icon: "error"
-      });
       console.error("Error creando persona:", error);
     }
   };
-
 
   return (
     <section className="dark:bg-gray-700">
@@ -60,7 +50,7 @@ const CreatePersona: React.FC = () => {
           <div className="sm:col-span-2">
             <label htmlFor="idPersona" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Persona</label>
             <input
-              type="text" 
+              type="text"
               id="idPersona"
               name="idPersona"
               value={newPersona.idPersona}
@@ -175,4 +165,5 @@ const CreatePersona: React.FC = () => {
 };
 
 export default CreatePersona;
+
 
