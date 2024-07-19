@@ -4,6 +4,7 @@ import { ColDef } from "ag-grid-community";
 import { useGetPersonas } from "../../hooks/persona/useGetPersonas";
 import { useDeletePersonas } from "../../hooks/persona/useDeletePersonas";
 import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
+import { useCreateDirecciones } from "../../hooks/direccion/useCreateDirecciones";
 import { useUpdatePersonas } from "../../hooks/persona/useUpdatePersonas";
 import CreatePersona from "./CreatePersonas";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
@@ -12,12 +13,13 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
-import { PersonaDB } from "./persona.types";
+import { DireccionDB, PersonaDB } from "./persona.types";
 
 export const Personas = () => {
   const { personas, loading, error, refetch } = useGetPersonas();
   const { deletePersona } = useDeletePersonas();
   const { createPersona } = useCreatePersona();
+  const { createDireccion } = useCreateDirecciones();
   const { updatePersona } = useUpdatePersonas();
 
   const [showModalCreate, setShowModalCreate] = useState(false);
@@ -77,27 +79,29 @@ export const Personas = () => {
     });
   };
 
-  const handleCreate = (persona: PersonaDB) => {
-    createPersona(persona)
-      .then((newPersona) => {
-        console.log("Persona creada", newPersona);
-        Swal.fire(
-          "¡Creado!",
-          "La persona ha sido creada.",
-          "success"
-        );
-        refetch();
-        handleCloseModalCreate();
-      })
-      .catch((err: any) => {
-        console.error("Error al crear persona:", err);
-        Swal.fire(
-          "Error",
-          "Hubo un error al crear la persona.",
-          "error"
-        );
-      });
+  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB) => {
+    try {
+
+      await createPersona(persona);
+      await createDireccion(direccion);
+
+      Swal.fire(
+        "¡Creado!",
+        "La persona y su dirección han sido creadas.",
+        "success"
+      );
+      refetch();
+      handleCloseModalCreate();
+    } catch (err) {
+      console.error("Error al crear persona y/o dirección:", err);
+      Swal.fire(
+        "Error",
+        "Hubo un error al crear la persona y/o la dirección.",
+        "error"
+      );
+    }
   };
+  
 
   const handleUpdate = (idPersona: string, persona: PersonaDB) => {
     updatePersona(idPersona, persona)
