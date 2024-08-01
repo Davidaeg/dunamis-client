@@ -40,12 +40,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
   };
 
   return (
-    <section className="dark:bg-gray-700">
-      <div className="py-8 px-4 mx-auto max-w-2xl">
-        <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Actualizar persona</h2>
-        <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-          <div className="sm:col-span-2">
-            <label htmlFor="idPersona" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Persona</label>
+    <section>
+      <div>
+        <h2 className="ml-3 mt-3 text-xl font-bold text-gray-900 ">Actualizar persona</h2>
+        <form onSubmit={handleSubmit} className="p-4 border rounded bg-gray-100">
+          <div>
+            <label htmlFor="idPersona" className="block font-medium">ID Persona</label>
             <input
               type="text"
               id="idPersona"
@@ -53,13 +53,13 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.idPersona}
               onChange={handleChange}
               placeholder="ID Persona"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
               readOnly
             />
           </div>
           <div>
-            <label htmlFor="nombre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+            <label htmlFor="nombre" className="block font-medium mt-3">Nombre</label>
             <input
               type="text"
               id="nombre"
@@ -67,12 +67,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.nombre}
               onChange={handleChange}
               placeholder="Nombre"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="apellido1" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido 1</label>
+            <label htmlFor="apellido1" className="block font-medium mt-3">Apellido 1</label>
             <input
               type="text"
               id="apellido1"
@@ -80,12 +80,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.apellido1}
               onChange={handleChange}
               placeholder="Apellido 1"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="apellido2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido 2</label>
+            <label htmlFor="apellido2" className="block font-medium mt-3">Apellido 2</label>
             <input
               type="text"
               id="apellido2"
@@ -93,12 +93,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.apellido2}
               onChange={handleChange}
               placeholder="Apellido 2"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="fechaNacimiento" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Nacimiento</label>
+            <label htmlFor="fechaNacimiento" className="block font-medium mt-3">Fecha de Nacimiento</label>
             <input
               type="date"
               id="fechaNacimiento"
@@ -106,12 +106,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.fechaNacimiento}
               onChange={handleChange}
               placeholder="Fecha de Nacimiento"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="numeroTelefono" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Teléfono</label>
+            <label htmlFor="numeroTelefono" className="block font-medium mt-3">Número de Teléfono</label>
             <input
               type="text"
               id="numeroTelefono"
@@ -119,12 +119,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.numeroTelefono}
               onChange={handleChange}
               placeholder="Número de Teléfono"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="numeroCelular" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Celular</label>
+            <label htmlFor="numeroCelular" className="block font-medium mt-3">Número de Celular</label>
             <input
               type="text"
               id="numeroCelular"
@@ -132,12 +132,12 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.numeroCelular}
               onChange={handleChange}
               placeholder="Número de Celular"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
           <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <label htmlFor="email" className="block font-medium mt-3">Email</label>
             <input
               type="email"
               id="email"
@@ -145,7 +145,7 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
               value={updatedPersona.email}
               onChange={handleChange}
               placeholder="Email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="mt-1 block w-full border rounded p-2"
               required
             />
           </div>
