@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGetDirecciones } from "../../hooks/direccion/useGetDirecciones";
-
+import { useUpdateDirecciones } from "../../hooks/direccion/useUpdateDirecciones";
+import Swal from "sweetalert2";
 interface DireccionProps {
   idPersona: string;
 }
@@ -8,6 +9,7 @@ interface DireccionProps {
 export const Direccion = ({ idPersona }: DireccionProps) => {
   const { direccion, persona, loading, error } = useGetDirecciones(idPersona);
   const [selectedDireccion, setSelectedDireccion] = useState<any>(null);
+  const { updateDirecciones } = useUpdateDirecciones();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -29,10 +31,31 @@ export const Direccion = ({ idPersona }: DireccionProps) => {
     }));
   };
 
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await updateDirecciones(idPersona, selectedDireccion);
+      Swal.fire(
+        "¡Actualizado!",
+        "La dirección a sido actualizada.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Error updating direccion:", error);
+      Swal.fire(
+        "Error",
+        "Hubo un error al actualizar la dirección.",
+        "error"
+      );
+    }
+  };
+
+
   return (
     <div>
       {selectedDireccion && (
-        <form className="p-4 border rounded bg-gray-100">
+        <form onSubmit={handleSubmit} className="p-4 border rounded bg-gray-100">
           <div className="mt-2">
             <label htmlFor="direccion" className="block font-medium">Dirección:</label>
             <input
