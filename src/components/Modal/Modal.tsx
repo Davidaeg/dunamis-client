@@ -20,7 +20,7 @@ const Modal: React.FC<Modal> = ({ isOpen, onClose, children }) => {
               onClick={onClose}
               className="absolute top-0 right-0 mt-4 mr-4 text-white hover:text-gray-400"
             >
-              <VscChromeClose className="h-6 w-6" />
+              <VscChromeClose className="h-6 w-6 text-black hover:text-gray-700" />
             </button>
         </div>
       </div>
