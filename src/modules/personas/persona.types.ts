@@ -1,4 +1,5 @@
 export interface DireccionDB {
+  idDireccion: string;
   Direccion: string;
   Provincia: string;
   Canton: string;
