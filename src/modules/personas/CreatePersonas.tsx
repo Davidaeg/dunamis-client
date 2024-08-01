@@ -19,6 +19,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
   });
 
   const [direccion, setDireccion] = useState<DireccionDB>({
+    idDireccion: "",
     Direccion: "",
     Provincia: "",
     Canton: "",
@@ -60,6 +61,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         direcciones: [],
       });
       setDireccion({
+        idDireccion: "",
         Direccion: "",
         Provincia: "",
         Canton: "",
