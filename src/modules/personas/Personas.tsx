@@ -13,6 +13,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
+import { Direccion } from "../direcciones/Direcciones";
 import { DireccionDB, PersonaDB } from "./persona.types";
 
 export const Personas = () => {
@@ -24,7 +25,8 @@ export const Personas = () => {
 
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState(null);
+  const [showModalAddress, setShowModalAddress] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState<any>(null);
 
   const handleCloseModalCreate = () => {
     setShowModalCreate(false);
@@ -35,12 +37,22 @@ export const Personas = () => {
     setSelectedPersona(null);
   };
 
+  const handleCloseModalAddress = () => {
+    setShowModalAddress(false);
+  };
+
   const handleShowModalCreate = () => setShowModalCreate(true);
   const handleShowModalEdit = () => setShowModalEdit(true);
+  const handleShowModalAddress = () => setShowModalAddress(true);
 
   const handleEdit = (persona: any) => {
     setSelectedPersona(persona);
     handleShowModalEdit();
+  };
+
+  const handleAddress = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalAddress();
   };
 
   const handleDelete = (idPersona: string) => {
@@ -81,7 +93,6 @@ export const Personas = () => {
 
   const handleCreate = async (persona: PersonaDB, direccion: DireccionDB) => {
     try {
-
       await createPersona(persona);
       await createDireccion(direccion);
 
@@ -101,7 +112,6 @@ export const Personas = () => {
       );
     }
   };
-  
 
   const handleUpdate = (idPersona: string, persona: PersonaDB) => {
     updatePersona(idPersona, persona)
@@ -117,11 +127,7 @@ export const Personas = () => {
       })
       .catch((err: any) => {
         console.error("Error al actualizar persona:", err);
-        Swal.fire(
-          "Error",
-          "Hubo un error al actualizar la persona.",
-          "error"
-        );
+        Swal.fire("Error", "Hubo un error al actualizar la persona.", "error");
       });
   };
 
@@ -134,6 +140,12 @@ export const Personas = () => {
     { headerName: "Numero Telefono", field: "numeroTelefono" },
     { headerName: "Numero Celular", field: "numeroCelular" },
     { headerName: "Email", field: "email" },
+    { headerName: "Dirección",
+      field: "direcciones",
+      cellRenderer: (params: any) => (
+        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleAddress(params.data)}>Ver Direcciones</button>
+      )
+    },
     {
       headerName: "Acciones",
       field: "acciones",
@@ -174,7 +186,12 @@ export const Personas = () => {
         <AgGridReact
           rowData={personas}
           columnDefs={columns}
-          defaultColDef={{ sortable: true, filter: true, resizable: true }}
+          defaultColDef={{
+            sortable: true,
+            filter: true,
+            resizable: true,
+            flex: 1,
+          }}
         />
       </div>
 
@@ -183,6 +200,11 @@ export const Personas = () => {
       </Modal>
       <Modal isOpen={showModalEdit} onClose={handleCloseModalEdit}>
         <UpdatePersonas persona={selectedPersona} onUpdate={handleUpdate} />
+      </Modal>
+      <Modal isOpen={showModalAddress} onClose={handleCloseModalAddress}>
+        {selectedPersona && (
+          <Direccion idPersona={selectedPersona.idPersona} />
+        )}
       </Modal>
     </div>
   );
