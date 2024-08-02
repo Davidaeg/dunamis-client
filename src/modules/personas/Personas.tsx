@@ -4,6 +4,7 @@ import { ColDef } from "ag-grid-community";
 import { useGetPersonas } from "../../hooks/persona/useGetPersonas";
 import { useDeletePersonas } from "../../hooks/persona/useDeletePersonas";
 import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
+import { useCreateDirecciones } from "../../hooks/direccion/useCreateDirecciones";
 import { useUpdatePersonas } from "../../hooks/persona/useUpdatePersonas";
 import CreatePersona from "./CreatePersonas";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
@@ -12,17 +13,20 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
-import { PersonaDB } from "./persona.types";
+import { Direccion } from "../direcciones/Direcciones";
+import { DireccionDB, PersonaDB } from "./persona.types";
 
 export const Personas = () => {
   const { personas, loading, error, refetch } = useGetPersonas();
   const { deletePersona } = useDeletePersonas();
   const { createPersona } = useCreatePersona();
+  const { createDireccion } = useCreateDirecciones();
   const { updatePersona } = useUpdatePersonas();
 
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState(null);
+  const [showModalAddress, setShowModalAddress] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState<any>(null);
 
   const handleCloseModalCreate = () => {
     setShowModalCreate(false);
@@ -33,12 +37,22 @@ export const Personas = () => {
     setSelectedPersona(null);
   };
 
+  const handleCloseModalAddress = () => {
+    setShowModalAddress(false);
+  };
+
   const handleShowModalCreate = () => setShowModalCreate(true);
   const handleShowModalEdit = () => setShowModalEdit(true);
+  const handleShowModalAddress = () => setShowModalAddress(true);
 
   const handleEdit = (persona: any) => {
     setSelectedPersona(persona);
     handleShowModalEdit();
+  };
+
+  const handleAddress = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalAddress();
   };
 
   const handleDelete = (idPersona: string) => {
@@ -77,26 +91,26 @@ export const Personas = () => {
     });
   };
 
-  const handleCreate = (persona: PersonaDB) => {
-    createPersona(persona)
-      .then((newPersona) => {
-        console.log("Persona creada", newPersona);
-        Swal.fire(
-          "¡Creado!",
-          "La persona ha sido creada.",
-          "success"
-        );
-        refetch();
-        handleCloseModalCreate();
-      })
-      .catch((err: any) => {
-        console.error("Error al crear persona:", err);
-        Swal.fire(
-          "Error",
-          "Hubo un error al crear la persona.",
-          "error"
-        );
-      });
+  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB) => {
+    try {
+      await createPersona(persona);
+      await createDireccion(direccion);
+
+      Swal.fire(
+        "¡Creado!",
+        "La persona y su dirección han sido creadas.",
+        "success"
+      );
+      refetch();
+      handleCloseModalCreate();
+    } catch (err) {
+      console.error("Error al crear persona y/o dirección:", err);
+      Swal.fire(
+        "Error",
+        "Hubo un error al crear la persona y/o la dirección.",
+        "error"
+      );
+    }
   };
 
   const handleUpdate = (idPersona: string, persona: PersonaDB) => {
@@ -113,11 +127,7 @@ export const Personas = () => {
       })
       .catch((err: any) => {
         console.error("Error al actualizar persona:", err);
-        Swal.fire(
-          "Error",
-          "Hubo un error al actualizar la persona.",
-          "error"
-        );
+        Swal.fire("Error", "Hubo un error al actualizar la persona.", "error");
       });
   };
 
@@ -130,6 +140,12 @@ export const Personas = () => {
     { headerName: "Numero Telefono", field: "numeroTelefono" },
     { headerName: "Numero Celular", field: "numeroCelular" },
     { headerName: "Email", field: "email" },
+    { headerName: "Dirección",
+      field: "direcciones",
+      cellRenderer: (params: any) => (
+        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleAddress(params.data)}>Ver Direcciones</button>
+      )
+    },
     {
       headerName: "Acciones",
       field: "acciones",
@@ -170,7 +186,12 @@ export const Personas = () => {
         <AgGridReact
           rowData={personas}
           columnDefs={columns}
-          defaultColDef={{ sortable: true, filter: true, resizable: true }}
+          defaultColDef={{
+            sortable: true,
+            filter: true,
+            resizable: true,
+            flex: 1,
+          }}
         />
       </div>
 
@@ -179,6 +200,11 @@ export const Personas = () => {
       </Modal>
       <Modal isOpen={showModalEdit} onClose={handleCloseModalEdit}>
         <UpdatePersonas persona={selectedPersona} onUpdate={handleUpdate} />
+      </Modal>
+      <Modal isOpen={showModalAddress} onClose={handleCloseModalAddress}>
+        {selectedPersona && (
+          <Direccion idPersona={selectedPersona.idPersona} />
+        )}
       </Modal>
     </div>
   );

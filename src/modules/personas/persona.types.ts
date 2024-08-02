@@ -1,3 +1,12 @@
+export interface DireccionDB {
+  idDireccion: string;
+  Direccion: string;
+  Provincia: string;
+  Canton: string;
+  Distrito: string;
+  idPersona: string;
+}
+
 export interface PersonaDB {
   idPersona: string;
   nombre: string;
@@ -7,4 +16,5 @@ export interface PersonaDB {
   numeroTelefono: string;
   numeroCelular: string;
   email: string;
+  direcciones?: DireccionDB[];
 }
