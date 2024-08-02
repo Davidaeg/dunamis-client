@@ -17,4 +17,22 @@ export interface PersonaDB {
   numeroCelular: string;
   email: string;
   direcciones?: DireccionDB[];
+  clientes?: ClientesDB[];
+  usuarios?: UsuariosDB[];
+}
+
+export interface ClientesDB {
+  idCliente: string;
+  categoriaLicencia: string;
+  fechaEmisionLicencia: string;
+  fechaVencimientoLicencia: string;
+  estado: string;
+  idPersona: string;
+}
+export interface UsuariosDB {
+  idUsuario: string;
+  nombre: string;
+  contrasenna: string;
+  idRol: string;
+  idPersona: string;
 }
