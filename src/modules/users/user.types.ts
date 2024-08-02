@@ -1,9 +1,9 @@
 export interface UserDb {
-  id: number;
-  name: string;
-  lastname: string;
-  email: string;
-  password: string;
+  idUsuario: number;
+  nombre: string;
+  contrasenna: string;
+  idRol: string;
+  idPersona: number;
 }
 
 export type User = {
