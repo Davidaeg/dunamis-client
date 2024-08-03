@@ -9,7 +9,7 @@ export const Users = () => {
 
   const columns: ColDef[] = [
     { headerName: "ID", field: "idUsuario" },
-    { headerName: "Nombre", field: "nombre" },
+    { headerName: "Nombre", field: "nombreUsuario" },
     { headerName: "Contraseña", field: "contrasenna" },
     { headerName: "Rol", field: "idRol" },
     { headerName: "idPersona", field: "idPersona" },
