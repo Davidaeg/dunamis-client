@@ -31,8 +31,8 @@ export interface ClientesDB {
 }
 export interface UsuariosDB {
   idUsuario: string;
-  nombre: string;
+  nombreUsuario: string;
   contrasenna: string;
-  idRol: string;
+  idRol: number;
   idPersona: string;
 }
