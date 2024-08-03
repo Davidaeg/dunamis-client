@@ -1,6 +1,6 @@
 export interface UserDb {
   idUsuario: number;
-  nombre: string;
+  nombreUsuario: string;
   contrasenna: string;
   idRol: string;
   idPersona: number;
