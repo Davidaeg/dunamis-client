@@ -1,17 +1,17 @@
-// import { dunamisApi } from "../../datasources/dunamisApi.service";
-// import { DireccionDB } from "../../modules/personas/persona.types";
+import { dunamisApi } from "../../datasources/dunamisApi.service";
+import { UsuariosDB } from "../../modules/personas/persona.types";
 
-// export const useUpdateDirecciones = () => {
-//   const updateDirecciones = async (idPersona: string, updatedDirecciones: DireccionDB): Promise<DireccionDB> => {
-//     try {
-//       const response = await dunamisApi.put<DireccionDB>(`/direccionPersona/${idPersona}`, updatedDirecciones);
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error updating persona:", error);
-//       throw error;
-//     }
-//   };
+export const useUpdateUsuarios = () => {
+  const updateUsuarios = async (idPersona: string, updatedUsuarios: UsuariosDB): Promise<UsuariosDB> => {
+    try {
+      const response = await dunamisApi.put<UsuariosDB>(`/usuariosPersona/${idPersona}`, updatedUsuarios);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating persona:", error);
+      throw error;
+    }
+  };
 
-//   return { updateDirecciones };
-// };
+  return { updateUsuarios };
+};
 
