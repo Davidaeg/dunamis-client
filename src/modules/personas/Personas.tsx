@@ -5,6 +5,7 @@ import { useGetPersonas } from "../../hooks/persona/useGetPersonas";
 import { useDeletePersonas } from "../../hooks/persona/useDeletePersonas";
 import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
 import { useCreateDirecciones } from "../../hooks/direccion/useCreateDirecciones";
+import { useCreateClientes } from "../../hooks/clientes/useCreateClientes";
 import { useUpdatePersonas } from "../../hooks/persona/useUpdatePersonas";
 import CreatePersona from "./CreatePersonas";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
@@ -14,18 +15,23 @@ import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
 import { Direccion } from "../direcciones/Direcciones";
-import { DireccionDB, PersonaDB } from "./persona.types";
+import { ClientesDB, DireccionDB, PersonaDB } from "./persona.types";
+import { Clientes } from "../clientes/Clientes";
+import { Usuarios } from "../users/Usuarios";
 
 export const Personas = () => {
   const { personas, loading, error, refetch } = useGetPersonas();
   const { deletePersona } = useDeletePersonas();
   const { createPersona } = useCreatePersona();
   const { createDireccion } = useCreateDirecciones();
+  const { createCliente } = useCreateClientes();
   const { updatePersona } = useUpdatePersonas();
 
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalAddress, setShowModalAddress] = useState(false);
+  const [showModalClientes, setShowModalClientes] = useState(false);
+  const [showModalUsuario, setShowModalUsuario] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<any>(null);
 
   const handleCloseModalCreate = () => {
@@ -41,9 +47,19 @@ export const Personas = () => {
     setShowModalAddress(false);
   };
 
+  const handleCloseModalClientes = () => {
+    setShowModalClientes(false);
+  };
+
+  const handleCloseModalUsuarios = () => {
+    setShowModalUsuario(false);
+  };
+
   const handleShowModalCreate = () => setShowModalCreate(true);
   const handleShowModalEdit = () => setShowModalEdit(true);
   const handleShowModalAddress = () => setShowModalAddress(true);
+  const handleShowModalUsuario = () => setShowModalUsuario(true);
+  const handleShowModalClientes = () => setShowModalClientes(true);
 
   const handleEdit = (persona: any) => {
     setSelectedPersona(persona);
@@ -53,6 +69,16 @@ export const Personas = () => {
   const handleAddress = (persona: any) => {
     setSelectedPersona(persona);
     handleShowModalAddress();
+  };
+
+  const handleClientes = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalClientes();
+  };
+
+  const handleUsuario = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalUsuario();
   };
 
   const handleDelete = (idPersona: string) => {
@@ -91,10 +117,11 @@ export const Personas = () => {
     });
   };
 
-  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB) => {
+  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB, cliente:ClientesDB) => {
     try {
       await createPersona(persona);
       await createDireccion(direccion);
+      await createCliente(cliente);
 
       Swal.fire(
         "¡Creado!",
@@ -144,6 +171,18 @@ export const Personas = () => {
       field: "direcciones",
       cellRenderer: (params: any) => (
         <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleAddress(params.data)}>Ver Direcciones</button>
+      )
+    },
+    { headerName: "Clientes",
+      field: "clientes",
+      cellRenderer: (params: any) => (
+        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleClientes(params.data)}>Cliente</button>
+      )
+    },
+    { headerName: "Empleado",
+      field: "usuario",
+      cellRenderer: (params: any) => (
+        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleUsuario(params.data)}>Empleado</button>
       )
     },
     {
@@ -206,6 +245,21 @@ export const Personas = () => {
           <Direccion idPersona={selectedPersona.idPersona} />
         )}
       </Modal>
+
+
+      <Modal isOpen={showModalClientes} onClose={handleCloseModalClientes}>
+        {selectedPersona && (
+          <Clientes idPersona={selectedPersona.idPersona} />
+        )}
+      </Modal>
+      <Modal isOpen={showModalUsuario} onClose={handleCloseModalUsuarios}>
+        {selectedPersona && (
+          <Usuarios idPersona={selectedPersona.idPersona} />
+        )}
+      </Modal>
+
+
+
     </div>
   );
 };
