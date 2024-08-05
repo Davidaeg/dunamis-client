@@ -36,3 +36,9 @@ export interface UsuariosDB {
   idRol: number;
   idPersona: string;
 }
+
+export interface RolesDB {
+  idRol: string;
+  nombre: string;
+  descripcion: string;
+}
