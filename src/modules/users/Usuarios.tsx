@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useGetUsers } from "../../hooks/user/useGetUsers";
 import Swal from "sweetalert2";
-import {useUpdateUsuarios } from "../../hooks/user/useUpdateUsers";
-
+import { useUpdateUsuarios } from "../../hooks/user/useUpdateUsers";
+import {UsuarioDTO} from "../personas/persona.types"
 
 interface UsuariosProps {
   idPersona: string;
@@ -10,7 +10,7 @@ interface UsuariosProps {
 
 export const Usuarios = ({ idPersona }: UsuariosProps) => {
   const { users, persona, loading, error } = useGetUsers(idPersona);
-  const [selectedUsuarios, setSelectedUsuarios] = useState<any>(null);
+  const [selectedUsuarios, setSelectedUsuarios] = useState<UsuarioDTO | null>(null);
   const { updateUsuarios } = useUpdateUsuarios();
 
   if (loading) {
@@ -25,24 +25,22 @@ export const Usuarios = ({ idPersona }: UsuariosProps) => {
     setSelectedUsuarios(users[0]);
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { id, value } = e.target;
-    setSelectedUsuarios((prev: any) => ({
-      ...prev,
-      [id]: value,
-    }));
+    setSelectedUsuarios((prev: UsuarioDTO | null) => prev ? { ...prev, [id]: value } : null);
   };
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await updateUsuarios(idPersona, selectedUsuarios);
-      Swal.fire(
-        "¡Actualizado!",
-        "La dirección a sido actualizada.",
-        "success"
-      );
+      if (selectedUsuarios) {
+        await updateUsuarios(idPersona, selectedUsuarios);
+        Swal.fire(
+          "¡Actualizado!",
+          "La dirección ha sido actualizada.",
+          "success"
+        );
+      }
     } catch (error) {
       console.error("Error updating direccion:", error);
       Swal.fire(
@@ -52,7 +50,6 @@ export const Usuarios = ({ idPersona }: UsuariosProps) => {
       );
     }
   };
-
 
   return (
     <div>
@@ -91,13 +88,15 @@ export const Usuarios = ({ idPersona }: UsuariosProps) => {
           </div>
           <div className="mt-2">
             <label htmlFor="idRol" className="block font-medium">Rol:</label>
-            <input
+            <select
               id="idRol"
-              type="text"
               value={selectedUsuarios.idRol}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
-            />
+            >
+              <option value="Admin">Administrador</option>
+              <option value="Empleado">Empleado</option>
+            </select>
           </div>
           <div className="mt-2">
             <label htmlFor="">Nombre: {persona.nombre}</label>
@@ -115,5 +114,6 @@ export const Usuarios = ({ idPersona }: UsuariosProps) => {
     </div>
   );
 };
+
 
 

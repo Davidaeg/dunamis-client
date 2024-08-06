@@ -15,9 +15,10 @@ import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
 import { Direccion } from "../direcciones/Direcciones";
-import { ClientesDB, DireccionDB, PersonaDB } from "./persona.types";
+import { ClientesDB, DireccionDB, PersonaDB, UsuariosDB } from "./persona.types";
 import { Clientes } from "../clientes/Clientes";
 import { Usuarios } from "../users/Usuarios";
+import { useCreateUsuario } from "../../hooks/user/useCreateUsers";
 
 export const Personas = () => {
   const { personas, loading, error, refetch } = useGetPersonas();
@@ -25,6 +26,7 @@ export const Personas = () => {
   const { createPersona } = useCreatePersona();
   const { createDireccion } = useCreateDirecciones();
   const { createCliente } = useCreateClientes();
+  const { createUsuario } = useCreateUsuario();
   const { updatePersona } = useUpdatePersonas();
 
   const [showModalCreate, setShowModalCreate] = useState(false);
@@ -117,11 +119,12 @@ export const Personas = () => {
     });
   };
 
-  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB, cliente:ClientesDB) => {
+  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB, cliente:ClientesDB, usuario:UsuariosDB) => {
     try {
       await createPersona(persona);
       await createDireccion(direccion);
       await createCliente(cliente);
+      await createUsuario(usuario);
 
       Swal.fire(
         "¡Creado!",
@@ -173,17 +176,18 @@ export const Personas = () => {
         <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleAddress(params.data)}>Ver Direcciones</button>
       )
     },
-    { headerName: "Clientes",
-      field: "clientes",
-      cellRenderer: (params: any) => (
-        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleClientes(params.data)}>Cliente</button>
-      )
-    },
-    { headerName: "Empleado",
-      field: "usuario",
-      cellRenderer: (params: any) => (
-        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleUsuario(params.data)}>Empleado</button>
-      )
+    { headerName: "Rol",
+      field: "rol",
+      cellRenderer: (params: any) => {
+        const { clientes, usuarios } = params.data;
+        if (clientes.length > 0) {
+          return <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleClientes(params.data)}>Cliente</button>;
+        } else if (usuarios.length > 0) {
+          return <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleUsuario(params.data)}>Personal</button>;
+        } else {
+          return <span>No definido</span>;
+        }
+      }
     },
     {
       headerName: "Acciones",

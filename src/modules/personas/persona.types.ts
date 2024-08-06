@@ -33,7 +33,7 @@ export interface UsuariosDB {
   idUsuario: string;
   nombreUsuario: string;
   contrasenna: string;
-  idRol: number;
+  idRol: string;
   idPersona: string;
 }
 
@@ -41,4 +41,12 @@ export interface RolesDB {
   idRol: string;
   nombre: string;
   descripcion: string;
+}
+
+export interface UsuarioDTO {
+  idUsuario: string;
+  nombreUsuario: string;
+  contrasenna: string;
+  idRol: string;
+  idPersona: string;
 }
