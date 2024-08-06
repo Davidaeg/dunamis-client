@@ -161,15 +161,15 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
   };
   return (
     <section>
-      <div className="max-w-4xl mx-auto">
+      <div>
         <h2 className="ml-3 mt-3 text-xl font-bold text-gray-900">
           Crear una nueva persona
         </h2>
         <form
           onSubmit={handleSubmit}
-          className="p-4 border rounded bg-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="p-4 border rounded bg-gray-100 grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          <div>
+          <div className="space-y-4">
             <h3 className="text-lg font-bold mb-3">Datos de Persona</h3>
             <div>
               <label htmlFor="idPersona" className="block font-medium">
@@ -298,7 +298,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
               />
             </div>
           </div>
-          <div>
+          <div className="space-y-4">
             <h3 className="text-lg font-bold mb-3">Datos de Dirección</h3>
             <div>
               <label htmlFor="Direccion" className="block font-medium ">
@@ -360,7 +360,8 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 required
               />
             </div>
-            
+            </div>
+            <div className="space-y-4">
             <div>
             <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
             <div>
