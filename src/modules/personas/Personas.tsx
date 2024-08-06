@@ -5,6 +5,7 @@ import { useGetPersonas } from "../../hooks/persona/useGetPersonas";
 import { useDeletePersonas } from "../../hooks/persona/useDeletePersonas";
 import { useCreatePersona } from "../../hooks/persona/useCreatePersonas";
 import { useCreateDirecciones } from "../../hooks/direccion/useCreateDirecciones";
+import { useCreateClientes } from "../../hooks/clientes/useCreateClientes";
 import { useUpdatePersonas } from "../../hooks/persona/useUpdatePersonas";
 import CreatePersona from "./CreatePersonas";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
@@ -14,18 +15,25 @@ import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
 import { Direccion } from "../direcciones/Direcciones";
-import { DireccionDB, PersonaDB } from "./persona.types";
+import { ClientesDB, DireccionDB, PersonaDB, UsuariosDB } from "./persona.types";
+import { Clientes } from "../clientes/Clientes";
+import { Usuarios } from "../users/Usuarios";
+import { useCreateUsuario } from "../../hooks/user/useCreateUsers";
 
 export const Personas = () => {
   const { personas, loading, error, refetch } = useGetPersonas();
   const { deletePersona } = useDeletePersonas();
   const { createPersona } = useCreatePersona();
   const { createDireccion } = useCreateDirecciones();
+  const { createCliente } = useCreateClientes();
+  const { createUsuario } = useCreateUsuario();
   const { updatePersona } = useUpdatePersonas();
 
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalAddress, setShowModalAddress] = useState(false);
+  const [showModalClientes, setShowModalClientes] = useState(false);
+  const [showModalUsuario, setShowModalUsuario] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<any>(null);
 
   const handleCloseModalCreate = () => {
@@ -41,9 +49,19 @@ export const Personas = () => {
     setShowModalAddress(false);
   };
 
+  const handleCloseModalClientes = () => {
+    setShowModalClientes(false);
+  };
+
+  const handleCloseModalUsuarios = () => {
+    setShowModalUsuario(false);
+  };
+
   const handleShowModalCreate = () => setShowModalCreate(true);
   const handleShowModalEdit = () => setShowModalEdit(true);
   const handleShowModalAddress = () => setShowModalAddress(true);
+  const handleShowModalUsuario = () => setShowModalUsuario(true);
+  const handleShowModalClientes = () => setShowModalClientes(true);
 
   const handleEdit = (persona: any) => {
     setSelectedPersona(persona);
@@ -53,6 +71,16 @@ export const Personas = () => {
   const handleAddress = (persona: any) => {
     setSelectedPersona(persona);
     handleShowModalAddress();
+  };
+
+  const handleClientes = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalClientes();
+  };
+
+  const handleUsuario = (persona: any) => {
+    setSelectedPersona(persona);
+    handleShowModalUsuario();
   };
 
   const handleDelete = (idPersona: string) => {
@@ -91,14 +119,35 @@ export const Personas = () => {
     });
   };
 
-  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB) => {
+  const handleCreate = async (
+    persona: PersonaDB,
+    direccion: DireccionDB,
+    clientes?: ClientesDB,
+    usuarios?: UsuariosDB
+  ) => {
+    const isCliente = Boolean(clientes);
+    const isUsuario = Boolean(usuarios);
+  
     try {
+      // Crear persona y dirección siempre
       await createPersona(persona);
       await createDireccion(direccion);
-
+  
+      // Crear cliente si se proporcionó
+      if (isCliente && clientes) {
+        await createCliente(clientes);
+      }
+  
+      // Crear usuario si se proporcionó
+      if (isUsuario && usuarios) {
+        await createUsuario(usuarios);
+      }
+  
       Swal.fire(
         "¡Creado!",
-        "La persona y su dirección han sido creadas.",
+        "La persona y su dirección han sido creadas." +
+          (isCliente ? " El cliente también ha sido creado." : "") +
+          (isUsuario ? " El usuario también ha sido creado." : ""),
         "success"
       );
       refetch();
@@ -107,7 +156,9 @@ export const Personas = () => {
       console.error("Error al crear persona y/o dirección:", err);
       Swal.fire(
         "Error",
-        "Hubo un error al crear la persona y/o la dirección.",
+        "Hubo un error al crear la persona y/o la dirección." +
+          (isCliente ? " o el cliente." : "") +
+          (isUsuario ? " o el usuario." : ""),
         "error"
       );
     }
@@ -145,6 +196,19 @@ export const Personas = () => {
       cellRenderer: (params: any) => (
         <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleAddress(params.data)}>Ver Direcciones</button>
       )
+    },
+    { headerName: "Rol",
+      field: "rol",
+      cellRenderer: (params: any) => {
+        const { clientes, usuarios } = params.data;
+        if (clientes.length > 0) {
+          return <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleClientes(params.data)}>Cliente</button>;
+        } else if (usuarios.length > 0) {
+          return <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleUsuario(params.data)}>Personal</button>;
+        } else {
+          return <span>No definido</span>;
+        }
+      }
     },
     {
       headerName: "Acciones",
@@ -206,6 +270,21 @@ export const Personas = () => {
           <Direccion idPersona={selectedPersona.idPersona} />
         )}
       </Modal>
+
+
+      <Modal isOpen={showModalClientes} onClose={handleCloseModalClientes}>
+        {selectedPersona && (
+          <Clientes idPersona={selectedPersona.idPersona} />
+        )}
+      </Modal>
+      <Modal isOpen={showModalUsuario} onClose={handleCloseModalUsuarios}>
+        {selectedPersona && (
+          <Usuarios idPersona={selectedPersona.idPersona} />
+        )}
+      </Modal>
+
+
+
     </div>
   );
 };

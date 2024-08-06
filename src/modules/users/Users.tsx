@@ -8,10 +8,11 @@ export const Users = () => {
   const { users, loading, error } = useGetUsers();
 
   const columns: ColDef[] = [
-    { headerName: "ID", field: "id" },
-    { headerName: "Name", field: "name" },
-    { headerName: "Lastname", field: "lastname" },
-    { headerName: "Email", field: "email" },
+    { headerName: "ID", field: "idUsuario" },
+    { headerName: "Nombre", field: "nombreUsuario" },
+    { headerName: "Contraseña", field: "contrasenna" },
+    { headerName: "Rol", field: "idRol" },
+    { headerName: "idPersona", field: "idPersona" },
   ];
 
   if (loading) {
