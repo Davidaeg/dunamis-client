@@ -10,10 +10,13 @@ interface CreatePersonaProps {
   onCreate: (
     persona: PersonaDB,
     direccion: DireccionDB,
-    clientes: ClientesDB,
-    usuarios: UsuariosDB
+    cliente?: ClientesDB,
+    usuario?: UsuariosDB,
+    isCliente?: boolean,
+    isUsuario?: boolean
   ) => void;
 }
+
 
 const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
   const [persona, setPersona] = useState<PersonaDB>({
@@ -54,6 +57,9 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
     idPersona: "",
   });
 
+  const [isCliente, setIsCliente] = useState<boolean>(false);
+  const [isUsuario, setIsUsuario] = useState<boolean>(false);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPersona((prevPersona) => {
@@ -63,11 +69,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
           ...prevDireccion,
           idPersona: value,
         }));
-      }
-      if (name === "idPersona") {
         setClientes((prevCliente) => ({ ...prevCliente, idPersona: value }));
-      }
-      if (name === "idPersona") {
         setUsuarios((prevUsuario) => ({ ...prevUsuario, idPersona: value }));
       }
       return updatedPersona;
@@ -89,16 +91,33 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
     setUsuarios((prevUsuario) => ({ ...prevUsuario, [name]: value }));
   };
 
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    if (name === "isCliente") {
+      setIsCliente(checked);
+    } else if (name === "isUsuario") {
+      setIsUsuario(checked);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
-      console.log("Persona a crear:", {
-        ...persona,
-        direcciones: [direccion],
-        clientes: [clientes],
-      });
-      onCreate(persona, direccion, clientes , usuarios);
+      const personaData = { ...persona, direcciones: [direccion] };
+      let clientesData;
+      let usuariosData;
+
+      if (isCliente) {
+        clientesData = clientes;
+      }
+      if (isUsuario) {
+        usuariosData = usuarios;
+      }
+
+      console.log("Persona a crear:", personaData, direccion, clientesData, usuariosData);
+      onCreate(personaData, direccion, isCliente ? clientesData : undefined, isUsuario ? usuariosData : undefined);
+
       setPersona({
         idPersona: "",
         nombre: "",
@@ -126,7 +145,6 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         estado: "",
         idPersona: "",
       });
-
       setUsuarios({
         idUsuario: "",
         nombreUsuario: "",
@@ -134,13 +152,13 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         idRol: "",
         idPersona: "",
       });
-
+      setIsCliente(false);
+      setIsUsuario(false);
 
     } catch (error) {
       console.error("Error creando persona:", error);
     }
   };
-
   return (
     <section>
       <div className="max-w-4xl mx-auto">
@@ -342,6 +360,36 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 required
               />
             </div>
+            
+            <div>
+            <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
+            <div>
+              <input
+                type="checkbox"
+                id="isCliente"
+                name="isCliente"
+                checked={isCliente}
+                onChange={handleCheckboxChange}
+              />
+              <label htmlFor="isCliente" className="ml-2">
+                Cliente
+              </label>
+            </div>
+            <div className="mt-2">
+              <input
+                type="checkbox"
+                id="isUsuario"
+                name="isUsuario"
+                checked={isUsuario}
+                onChange={handleCheckboxChange}
+              />
+              <label htmlFor="isUsuario" className="ml-2">
+                Usuario
+              </label>
+            </div>
+          </div>
+
+          {isCliente && (
             <div>
               <h3 className="text-lg font-bold mt-4">Datos de Cliente</h3>
               <div>
@@ -420,9 +468,10 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 />
               </div>
             </div>
-
+            )}
+            {isUsuario && (
             <div>
-              <h3 className="text-lg font-bold mt-4">Datos del Empleado</h3>
+              <h3 className="text-lg font-bold mt-4">Datos del Usuario</h3>
               <div>
                 <label htmlFor="nombreUsuario" className="block font-medium mt-2">
                   Nombre de Usuario:
@@ -469,6 +518,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 />
               </div>
             </div>
+            )}
             <div className="mt-6">
               <button
                 type="submit"

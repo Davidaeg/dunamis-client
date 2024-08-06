@@ -119,16 +119,35 @@ export const Personas = () => {
     });
   };
 
-  const handleCreate = async (persona: PersonaDB, direccion: DireccionDB, cliente:ClientesDB, usuario:UsuariosDB) => {
+  const handleCreate = async (
+    persona: PersonaDB,
+    direccion: DireccionDB,
+    clientes?: ClientesDB,
+    usuarios?: UsuariosDB
+  ) => {
+    const isCliente = Boolean(clientes);
+    const isUsuario = Boolean(usuarios);
+  
     try {
+      // Crear persona y dirección siempre
       await createPersona(persona);
       await createDireccion(direccion);
-      await createCliente(cliente);
-      await createUsuario(usuario);
-
+  
+      // Crear cliente si se proporcionó
+      if (isCliente && clientes) {
+        await createCliente(clientes);
+      }
+  
+      // Crear usuario si se proporcionó
+      if (isUsuario && usuarios) {
+        await createUsuario(usuarios);
+      }
+  
       Swal.fire(
         "¡Creado!",
-        "La persona y su dirección han sido creadas.",
+        "La persona y su dirección han sido creadas." +
+          (isCliente ? " El cliente también ha sido creado." : "") +
+          (isUsuario ? " El usuario también ha sido creado." : ""),
         "success"
       );
       refetch();
@@ -137,7 +156,9 @@ export const Personas = () => {
       console.error("Error al crear persona y/o dirección:", err);
       Swal.fire(
         "Error",
-        "Hubo un error al crear la persona y/o la dirección.",
+        "Hubo un error al crear la persona y/o la dirección." +
+          (isCliente ? " o el cliente." : "") +
+          (isUsuario ? " o el usuario." : ""),
         "error"
       );
     }
