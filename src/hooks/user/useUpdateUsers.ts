@@ -1,10 +1,10 @@
 import { dunamisApi } from "../../datasources/dunamisApi.service";
-import { UsuariosDB } from "../../modules/personas/persona.types";
+import { UsuarioDTO } from "../../modules/personas/persona.types";
 
 export const useUpdateUsuarios = () => {
-  const updateUsuarios = async (idPersona: string, updatedUsuarios: UsuariosDB): Promise<UsuariosDB> => {
+  const updateUsuarios = async (idPersona: string, updatedUsuarios: UsuarioDTO): Promise<UsuarioDTO> => {
     try {
-      const response = await dunamisApi.put<UsuariosDB>(`/usuariosPersona/${idPersona}`, updatedUsuarios);
+      const response = await dunamisApi.put<UsuarioDTO>(`/usuariosPersona/${idPersona}`, updatedUsuarios);
       return response.data;
     } catch (error) {
       console.error("Error updating persona:", error);

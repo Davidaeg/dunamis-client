@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { UsuariosDB, PersonaDB } from "../../modules/personas/persona.types";
+import { PersonaDB, UsuarioDTO } from "../../modules/personas/persona.types";
 import { dunamisApi } from "../../datasources/dunamisApi.service";
 
 export const useGetUsers = (idPersona: string) => {
-  const [users, setUsers] = useState<UsuariosDB[]>([]);
+  const [users, setUsers] = useState<UsuarioDTO[]>([]);
   const [persona, setPersona] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -11,7 +11,7 @@ export const useGetUsers = (idPersona: string) => {
 const fetchUsarios = async () => {
   setLoading(true);
   try {
-    const response = await dunamisApi.get<UsuariosDB[]>(`/usuarioPorPersona/${idPersona}`);
+    const response = await dunamisApi.get<UsuarioDTO[]>(`/usuarioPorPersonaDTO/${idPersona}`);
     const responsePersona = await dunamisApi.get<PersonaDB[]>(`/persona/${idPersona}`);
     console.log('Datos obtenidos:', response.data);
     setUsers(response.data);
