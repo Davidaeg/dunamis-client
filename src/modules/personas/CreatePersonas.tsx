@@ -3,13 +3,15 @@ import {
   PersonaDB,
   DireccionDB,
   ClientesDB,
+  UsuariosDB,
 } from "../../modules/personas/persona.types";
 
 interface CreatePersonaProps {
   onCreate: (
     persona: PersonaDB,
     direccion: DireccionDB,
-    clientes: ClientesDB
+    clientes: ClientesDB,
+    usuarios: UsuariosDB
   ) => void;
 }
 
@@ -44,6 +46,14 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
     idPersona: "",
   });
 
+  const [usuarios, setUsuarios] = useState<UsuariosDB>({
+    idUsuario: "",
+    nombreUsuario: "",
+    contrasenna: "",
+    idRol: "",
+    idPersona: "",
+  });
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPersona((prevPersona) => {
@@ -56,6 +66,9 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
       }
       if (name === "idPersona") {
         setClientes((prevCliente) => ({ ...prevCliente, idPersona: value }));
+      }
+      if (name === "idPersona") {
+        setUsuarios((prevUsuario) => ({ ...prevUsuario, idPersona: value }));
       }
       return updatedPersona;
     });
@@ -71,6 +84,11 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
     setClientes((prevCliente) => ({ ...prevCliente, [name]: value }));
   };
 
+  const handleUsuarioChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUsuarios((prevUsuario) => ({ ...prevUsuario, [name]: value }));
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -80,7 +98,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         direcciones: [direccion],
         clientes: [clientes],
       });
-      onCreate(persona, direccion, clientes);
+      onCreate(persona, direccion, clientes , usuarios);
       setPersona({
         idPersona: "",
         nombre: "",
@@ -108,6 +126,16 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         estado: "",
         idPersona: "",
       });
+
+      setUsuarios({
+        idUsuario: "",
+        nombreUsuario: "",
+        contrasenna: "",
+        idRol: "",
+        idPersona: "",
+      });
+
+
     } catch (error) {
       console.error("Error creando persona:", error);
     }
@@ -387,6 +415,55 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                   value={clientes.estado}
                   onChange={handleClienteChange}
                   placeholder="Estado"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mt-4">Datos del Empleado</h3>
+              <div>
+                <label htmlFor="nombreUsuario" className="block font-medium mt-2">
+                  Nombre de Usuario:
+                </label>
+                <input
+                  type="text"
+                  id="nombreUsuario"
+                  name="nombreUsuario"
+                  value={usuarios.nombreUsuario}
+                  onChange={handleUsuarioChange}
+                  placeholder="Nombre de Usuario"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="contrasenna" className="block font-medium mt-4">
+                  Contraseña:
+                </label>
+                <input
+                  type="text"
+                  id="contrasenna"
+                  name="contrasenna"
+                  value={usuarios.contrasenna}
+                  onChange={handleUsuarioChange}
+                  placeholder="Contraseña"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="idRol" className="block font-medium mt-4">
+                  Rol:
+                </label>
+                <input
+                  type="text"
+                  id="idRol"
+                  name="idRol"
+                  value={usuarios.idRol}
+                  onChange={handleUsuarioChange}
+                  placeholder="Rol"
                   className="mt-1 block w-full border rounded p-2"
                   required
                 />
