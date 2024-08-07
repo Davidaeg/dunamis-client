@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import {
   SegmentoDB,
 } from "../automovil/automovil.types";
-import { Automovil } from "../automovil/Automovil";
 
 interface CreateSegmentoProps {
   onCreate: (
