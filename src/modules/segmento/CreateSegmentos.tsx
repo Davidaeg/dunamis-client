@@ -52,7 +52,7 @@ const CreateSegmentos: React.FC<CreateSegmentoProps> = ({ onCreate }) => {
         </h2>
         <form
           onSubmit={handleSubmit}
-          className="p-4 border rounded bg-gray-100 grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="p-4 border rounded bg-gray-100"
         >
           <div className="space-y-4">
             <h3 className="text-lg font-bold mb-3">Datos del segmento</h3>
