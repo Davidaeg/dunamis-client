@@ -8,14 +8,15 @@ export interface AutomovilDB {
   placa: string;
   marca: string;
   modelo: string;
-  anno: string;
+  anno: number;
   color: string;
   estilo: string;
   carroceria: string;
   combustible: string;
   cabina: string;
   traccion: string;
-  Transmision: string;
-  costo: string;
+  transmision: string;
+  costo: number;
   automovilActivo: boolean;
+  idSegmento:number;
 }
