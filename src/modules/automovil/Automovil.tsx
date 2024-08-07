@@ -12,6 +12,7 @@ import { AutomovilDB } from "./automovil.types";
 import { useCreateAutomovil } from "../../hooks/automoviles/useCreateAutomovil";
 import { useDeleteAutomovil } from "../../hooks/automoviles/useDeleteAutomovil";
 import { useUpdateAutomovil } from "../../hooks/automoviles/useUpdateAutomovil";
+import UpdateAutomoviles from "./UpdateAutomoviles";
 
 export const Automovil = () => {
   const { automovil, loading, error, refetch } = useGetAutomovil();
@@ -24,9 +25,15 @@ export const Automovil = () => {
   const { updateAutomovil } = useUpdateAutomovil();
 
   const handleShowModalCreateAuto = () => setShowModalCreateAuto(true);
+  const handleShowModalEditAuto = () => setShowModalEditAuto(true);
 
   const handleCloseModalCreateAuto = () => {
     setShowModalCreateAuto(false);
+  };
+
+  const handleCloseModalEditAutomovil = () => {
+    setShowModalEditAuto(false);
+    setSelectedAuto(null);
   };
 
   const handleCreate = async (automovil: AutomovilDB) => {
@@ -42,7 +49,10 @@ export const Automovil = () => {
     }
   };
 
-  const handleEdit = (automovil: any) => {};
+  const handleEdit = (automovil: any) => {
+    setSelectedAuto(automovil);
+    handleShowModalEditAuto();
+  };
 
   const handleDelete = (placa: string) => {
     Swal.fire({
@@ -80,6 +90,24 @@ export const Automovil = () => {
     });
   };
 
+  const handleUpdate = (placa: string, automovil: AutomovilDB) => {
+    updateAutomovil(placa, automovil)
+      .then((updatedAutomovil) => {
+        console.log("Automovil actualizado", updatedAutomovil);
+        Swal.fire(
+          "¡Actualizado!",
+          "El segmento ha sido actualizado.",
+          "success"
+        );
+        refetch();
+        handleCloseModalEditAutomovil();
+      })
+      .catch((err: any) => {
+        console.error("Error al actualizar segmento:", err);
+        Swal.fire("Error", "Hubo un error al actualizar el segmento.", "error");
+      });
+  };
+
   const columns: ColDef[] = [
     { headerName: "Placa del vehiculo", field: "placa" },
     { headerName: "Marca", field: "marca" },
@@ -92,11 +120,12 @@ export const Automovil = () => {
     { headerName: "Traccion", field: "traccion" },
     { headerName: "Transmision", field: "transmision" },
     { headerName: "Costo", field: "costo" },
+    { headerName: "Disponible", field: "automovilActivo" },
     { headerName: "Segmento", field: "segmento" },
     {
       headerName: "Acciones",
       field: "acciones",
-      minWidth: 150,
+      minWidth: 155,
       cellRenderer: (params: any) => (
         <ActionButtons
           onEdit={() => handleEdit(params.data)}
@@ -146,6 +175,10 @@ export const Automovil = () => {
         onClose={handleCloseModalCreateAuto}
       >
         <CreateAutomoviles onCreate={handleCreate} />
+      </Modal>
+
+      <Modal isOpen={showModalEditAuto} onClose={handleCloseModalEditAutomovil}>
+        <UpdateAutomoviles automovil={selectedAuto} onUpdate={handleUpdate} />
       </Modal>
     </div>
   );
