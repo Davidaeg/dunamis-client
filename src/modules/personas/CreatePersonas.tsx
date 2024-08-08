@@ -249,17 +249,16 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
               >
                 Fecha de Nacimiento
               </label>
-              <InputMask
-                mask="9999-99-99"
-                value={persona.fechaNacimiento}
-                onChange={handleChange}
-                placeholder="YYYY-MM-DD"
-                className="mt-1 block w-full border rounded p-2"
+              <input
+                type="date"
                 id="fechaNacimiento"
                 name="fechaNacimiento"
+                value={persona.fechaNacimiento}
+                onChange={handleChange}
+                placeholder="Fecha de Nacimiento"
+                className="mt-1 block w-full border rounded p-2"
                 required
-              >
-              </InputMask>
+              />
             </div>
             <div>
               <label
