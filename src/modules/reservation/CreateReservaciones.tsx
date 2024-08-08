@@ -22,6 +22,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
   });
 
   const [selectedAuto, setSelectedAuto] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     automovil,
@@ -55,6 +56,11 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!selectedAuto) {
+      setError(" Seleccionar vehículo para agregar la nueva reserva");
+      return;
+    }
+
     try {
       const reservaData = { ...reservas };
 
@@ -71,7 +77,8 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
         placa: "",
         idCliente: "",
       });
-      setSelectedAuto("");
+      setSelectedAuto(null);
+      setError(null);
     } catch (error) {
       console.error("Error creando la reserva:", error);
     }
@@ -104,6 +111,15 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
           onSubmit={handleSubmit}
           className="p-4 border rounded bg-gray-100"
         >
+          {error && (
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
+              <strong className="font-bold">Error:</strong>
+              <span className="block sm:inline">{error}</span>
+            </div>
+          )}
           <div className="space-y-4">
             <h3 className="text-lg font-bold mb-3">Datos de la Reserva</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -168,31 +184,36 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
                 />
               </div>
               <div className="col-span-2">
-            <label htmlFor="placa" className="block font-medium">
-              Automovil Disponible
-            </label>
-            <div className="ag-theme-alpine" style={{ height: 200, width: '100%' }}>
-              <AgGridReact
-                rowData={automovil}
-                columnDefs={autoColumns}
-                defaultColDef={{
-                  sortable: true,
-                  filter: true,
-                  resizable: true,
-                  flex: 1,
-                }}
-                rowSelection="single"
-                onSelectionChanged={(event) => {
-                  const selectedNodes = event.api.getSelectedNodes();
-                  const selectedData = selectedNodes.map(node => node.data);
-                  if (selectedData.length > 0) {
-                    const selectedPlaca = selectedData[0].placa;
-                    handleAutoSelection(selectedPlaca);
-                  }
-                }}
-              />
-            </div>
-          </div>
+                <label htmlFor="placa" className="block font-medium">
+                  Automovil Disponible
+                </label>
+                <div
+                  className="ag-theme-alpine"
+                  style={{ height: 200, width: "100%" }}
+                >
+                  <AgGridReact
+                    rowData={automovil}
+                    columnDefs={autoColumns}
+                    defaultColDef={{
+                      sortable: true,
+                      filter: true,
+                      resizable: true,
+                      flex: 1,
+                    }}
+                    rowSelection="single"
+                    onSelectionChanged={(event) => {
+                      const selectedNodes = event.api.getSelectedNodes();
+                      const selectedData = selectedNodes.map(
+                        (node) => node.data
+                      );
+                      if (selectedData.length > 0) {
+                        const selectedPlaca = selectedData[0].placa;
+                        handleAutoSelection(selectedPlaca);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
               <div>
                 <label htmlFor="idCliente" className="block font-medium">
                   Cliente disponible
