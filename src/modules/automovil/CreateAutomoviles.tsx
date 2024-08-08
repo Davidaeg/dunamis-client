@@ -36,7 +36,7 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
         name === "anno"
           ? parseInt(value)
           : name === "costo"
-          ? parseFloat(parseFloat(value).toFixed(2)) // Formatea el costo a dos decimales
+          ? parseFloat(parseFloat(value).toFixed(2))
           : name === "idSegmento"
           ? parseInt(value)
           : value,
