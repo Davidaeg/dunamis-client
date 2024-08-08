@@ -1,4 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import InputMask from "react-input-mask";
+
 import {
   PersonaDB,
   DireccionDB,
@@ -16,7 +18,6 @@ interface CreatePersonaProps {
     isUsuario?: boolean
   ) => void;
 }
-
 
 const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
   const [persona, setPersona] = useState<PersonaDB>({
@@ -115,8 +116,19 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         usuariosData = usuarios;
       }
 
-      console.log("Persona a crear:", personaData, direccion, clientesData, usuariosData);
-      onCreate(personaData, direccion, isCliente ? clientesData : undefined, isUsuario ? usuariosData : undefined);
+      console.log(
+        "Persona a crear:",
+        personaData,
+        direccion,
+        clientesData,
+        usuariosData
+      );
+      onCreate(
+        personaData,
+        direccion,
+        isCliente ? clientesData : undefined,
+        isUsuario ? usuariosData : undefined
+      );
 
       setPersona({
         idPersona: "",
@@ -154,7 +166,6 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
       });
       setIsCliente(false);
       setIsUsuario(false);
-
     } catch (error) {
       console.error("Error creando persona:", error);
     }
@@ -238,16 +249,17 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
               >
                 Fecha de Nacimiento
               </label>
-              <input
-                type="date"
-                id="fechaNacimiento"
-                name="fechaNacimiento"
+              <InputMask
+                mask="9999-99-99"
                 value={persona.fechaNacimiento}
                 onChange={handleChange}
-                placeholder="Fecha de Nacimiento"
+                placeholder="YYYY-MM-DD"
                 className="mt-1 block w-full border rounded p-2"
+                id="fechaNacimiento"
+                name="fechaNacimiento"
                 required
-              />
+              >
+              </InputMask>
             </div>
             <div>
               <label
@@ -360,165 +372,180 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 required
               />
             </div>
-            </div>
-            <div className="space-y-4">
-            <div>
-            <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
-            <div>
-              <input
-                type="checkbox"
-                id="isCliente"
-                name="isCliente"
-                checked={isCliente}
-                onChange={handleCheckboxChange}
-              />
-              <label htmlFor="isCliente" className="ml-2">
-                Cliente
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                type="checkbox"
-                id="isUsuario"
-                name="isUsuario"
-                checked={isUsuario}
-                onChange={handleCheckboxChange}
-              />
-              <label htmlFor="isUsuario" className="ml-2">
-                Usuario
-              </label>
-            </div>
           </div>
-
-          {isCliente && (
+          <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-bold mt-4">Datos de Cliente</h3>
+              <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
               <div>
-                <label htmlFor="idCliente" className="block font-medium mt-2">
-                  ID Cliente
-                </label>
                 <input
-                  type="text"
-                  id="idCliente"
-                  name="idCliente"
-                  value={clientes.idCliente}
-                  onChange={handleClienteChange}
-                  placeholder="ID Cliente"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
+                  type="checkbox"
+                  id="isCliente"
+                  name="isCliente"
+                  checked={isCliente}
+                  onChange={handleCheckboxChange}
                 />
+                <label htmlFor="isCliente" className="ml-2">
+                  Cliente
+                </label>
               </div>
-              <div>
-                <label htmlFor="categoriaLicencia" className="block font-medium mt-4">
-                  Categoria Licencia
-                </label>
+              <div className="mt-2">
                 <input
-                  type="text"
-                  id="categoriaLicencia"
-                  name="categoriaLicencia"
-                  value={clientes.categoriaLicencia}
-                  onChange={handleClienteChange}
-                  placeholder="Categoria Licencia"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
+                  type="checkbox"
+                  id="isUsuario"
+                  name="isUsuario"
+                  checked={isUsuario}
+                  onChange={handleCheckboxChange}
                 />
-              </div>
-              <div>
-                <label htmlFor="fechaEmisionLicencia" className="block font-medium mt-4">
-                  Fecha Emision Licencia
+                <label htmlFor="isUsuario" className="ml-2">
+                  Usuario
                 </label>
-                <input
-                  type="date"
-                  id="fechaEmisionLicencia"
-                  name="fechaEmisionLicencia"
-                  value={clientes.fechaEmisionLicencia}
-                  onChange={handleClienteChange}
-                  placeholder="Fecha Emision Licencia"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="fechaVencimientoLicencia" className="block font-medium mt-4">
-                  Fecha Vencimiento Licencia
-                </label>
-                <input
-                  type="date"
-                  id="fechaVencimientoLicencia"
-                  name="fechaVencimientoLicencia"
-                  value={clientes.fechaVencimientoLicencia}
-                  onChange={handleClienteChange}
-                  placeholder="Fecha Vencimiento Licencia"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="estado" className="block font-medium mt-4">
-                  Estado
-                </label>
-                <input
-                  type="text"
-                  id="estado"
-                  name="estado"
-                  value={clientes.estado}
-                  onChange={handleClienteChange}
-                  placeholder="Estado"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
               </div>
             </div>
+
+            {isCliente && (
+              <div>
+                <h3 className="text-lg font-bold mt-4">Datos de Cliente</h3>
+                <div>
+                  <label htmlFor="idCliente" className="block font-medium mt-2">
+                    ID Cliente
+                  </label>
+                  <input
+                    type="text"
+                    id="idCliente"
+                    name="idCliente"
+                    value={clientes.idCliente}
+                    onChange={handleClienteChange}
+                    placeholder="ID Cliente"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="categoriaLicencia"
+                    className="block font-medium mt-4"
+                  >
+                    Categoria Licencia
+                  </label>
+                  <input
+                    type="text"
+                    id="categoriaLicencia"
+                    name="categoriaLicencia"
+                    value={clientes.categoriaLicencia}
+                    onChange={handleClienteChange}
+                    placeholder="Categoria Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="fechaEmisionLicencia"
+                    className="block font-medium mt-4"
+                  >
+                    Fecha Emision Licencia
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaEmisionLicencia"
+                    name="fechaEmisionLicencia"
+                    value={clientes.fechaEmisionLicencia}
+                    onChange={handleClienteChange}
+                    placeholder="Fecha Emision Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="fechaVencimientoLicencia"
+                    className="block font-medium mt-4"
+                  >
+                    Fecha Vencimiento Licencia
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaVencimientoLicencia"
+                    name="fechaVencimientoLicencia"
+                    value={clientes.fechaVencimientoLicencia}
+                    onChange={handleClienteChange}
+                    placeholder="Fecha Vencimiento Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="estado" className="block font-medium mt-4">
+                    Estado
+                  </label>
+                  <input
+                    type="text"
+                    id="estado"
+                    name="estado"
+                    value={clientes.estado}
+                    onChange={handleClienteChange}
+                    placeholder="Estado"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+              </div>
             )}
             {isUsuario && (
-            <div>
-              <h3 className="text-lg font-bold mt-4">Datos del Usuario</h3>
               <div>
-                <label htmlFor="nombreUsuario" className="block font-medium mt-2">
-                  Nombre de Usuario:
-                </label>
-                <input
-                  type="text"
-                  id="nombreUsuario"
-                  name="nombreUsuario"
-                  value={usuarios.nombreUsuario}
-                  onChange={handleUsuarioChange}
-                  placeholder="Nombre de Usuario"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
+                <h3 className="text-lg font-bold mt-4">Datos del Usuario</h3>
+                <div>
+                  <label
+                    htmlFor="nombreUsuario"
+                    className="block font-medium mt-2"
+                  >
+                    Nombre de Usuario:
+                  </label>
+                  <input
+                    type="text"
+                    id="nombreUsuario"
+                    name="nombreUsuario"
+                    value={usuarios.nombreUsuario}
+                    onChange={handleUsuarioChange}
+                    placeholder="Nombre de Usuario"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="contrasenna"
+                    className="block font-medium mt-4"
+                  >
+                    Contraseña:
+                  </label>
+                  <input
+                    type="text"
+                    id="contrasenna"
+                    name="contrasenna"
+                    value={usuarios.contrasenna}
+                    onChange={handleUsuarioChange}
+                    placeholder="Contraseña"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="idRol" className="block font-medium mt-4">
+                    Rol:
+                  </label>
+                  <input
+                    type="text"
+                    id="idRol"
+                    name="idRol"
+                    value={usuarios.idRol}
+                    onChange={handleUsuarioChange}
+                    placeholder="Rol"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor="contrasenna" className="block font-medium mt-4">
-                  Contraseña:
-                </label>
-                <input
-                  type="text"
-                  id="contrasenna"
-                  name="contrasenna"
-                  value={usuarios.contrasenna}
-                  onChange={handleUsuarioChange}
-                  placeholder="Contraseña"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="idRol" className="block font-medium mt-4">
-                  Rol:
-                </label>
-                <input
-                  type="text"
-                  id="idRol"
-                  name="idRol"
-                  value={usuarios.idRol}
-                  onChange={handleUsuarioChange}
-                  placeholder="Rol"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-            </div>
             )}
             <div className="mt-6">
               <button
