@@ -40,12 +40,12 @@ export const Automovil = () => {
     try {
       await createAutomovil(automovil);
 
-      Swal.fire("¡Creado!", "El segmento ha sido creado.", "success");
+      Swal.fire("¡Creado!", "El Automovil ha sido creado.", "success");
       refetch();
       handleCloseModalCreateAuto();
     } catch (err) {
-      console.error("Error al crear segmento:", err);
-      Swal.fire("Error", "Hubo un error al crear el segmento.", "error");
+      console.error("Error al crear automovil:", err);
+      Swal.fire("Error", "Hubo un error al crear el automovil.", "error");
     }
   };
 
@@ -101,15 +101,15 @@ export const Automovil = () => {
         console.log("Automovil actualizado", updatedAutomovil);
         Swal.fire(
           "¡Actualizado!",
-          "El segmento ha sido actualizado.",
+          "El Automovil ha sido actualizado.",
           "success"
         );
         refetch();
         handleCloseModalEditAutomovil();
       })
       .catch((err: any) => {
-        console.error("Error al actualizar segmento:", err);
-        Swal.fire("Error", "Hubo un error al actualizar el segmento.", "error");
+        console.error("Error al actualizar automovil:", err);
+        Swal.fire("Error", "Hubo un error al actualizar el automovil.", "error");
       });
   };
 

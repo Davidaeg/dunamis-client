@@ -3,22 +3,21 @@ import { dunamisApi } from "../../datasources/dunamisApi.service";
 
 export const useDeleteReservacion = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const deleteReservacion = async (idReservacion: string): Promise<boolean> => {
+  const deleteReservacion = async (idReservacion: string): Promise<{ success: boolean; error: string | null }> => {
     setLoading(true);
     try {
       await dunamisApi.delete(`/reservacion/${idReservacion}`);
       setLoading(false);
-      return true;
-    } catch (err) {
-      setError("Error deleting reservacion");
+      return { success: true, error: null };
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "No se puede eliminar la reserva";
       setLoading(false);
-      return false;
+      return { success: false, error: errorMessage };
     }
   };
 
-  return { deleteReservacion, loading, error };
+  return { deleteReservacion, loading};
 };
 
 
