@@ -124,7 +124,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
               </div>
               <div>
                 <label htmlFor="fechaFin" className="block font-medium">
-                  Fecha final de la reserva
+                  Fecha Final de la reserva
                 </label>
                 <input
                   type="date"
@@ -139,7 +139,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
               </div>
               <div>
                 <label htmlFor="kmIniciales" className="block font-medium">
-                  Kilometros iniciales del vehiculo
+                  Kilometros Iniciales del automovil
                 </label>
                 <input
                   type="text"
@@ -154,7 +154,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
               </div>
               <div>
                 <label htmlFor="kmFinales" className="block font-medium">
-                  Kilometros Finales del vehiculo
+                  Kilometros Finales del automovil
                 </label>
                 <input
                   type="text"
@@ -167,7 +167,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
                   required
                 />
               </div>
-              <div className="col-span-2"> {/* Ocupa todo el ancho disponible */}
+              <div className="col-span-2">
             <label htmlFor="placa" className="block font-medium">
               Automovil Disponible
             </label>
@@ -175,12 +175,18 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
               <AgGridReact
                 rowData={automovil}
                 columnDefs={autoColumns}
+                defaultColDef={{
+                  sortable: true,
+                  filter: true,
+                  resizable: true,
+                  flex: 1,
+                }}
                 rowSelection="single"
                 onSelectionChanged={(event) => {
                   const selectedNodes = event.api.getSelectedNodes();
                   const selectedData = selectedNodes.map(node => node.data);
                   if (selectedData.length > 0) {
-                    const selectedPlaca = selectedData[0].placa; // Corregido aquí
+                    const selectedPlaca = selectedData[0].placa;
                     handleAutoSelection(selectedPlaca);
                   }
                 }}
