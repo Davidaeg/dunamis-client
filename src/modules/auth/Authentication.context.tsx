@@ -22,7 +22,7 @@ const guestUser: User = {
 //   routes: userRoutesMap[UserType.ADMIN],
 //   username: "Admin",
 //   userType: UserType.ADMIN,
-//   defaultRoute: "/admin/userstemp",
+//   defaultRoute: "/admin/home",
 // };
 
 //EMPLOYEE USER
