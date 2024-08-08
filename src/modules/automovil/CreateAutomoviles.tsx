@@ -24,7 +24,7 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
     idSegmento: 0,
   });
 
-  const { segmento, loading, error, refetch } = useGetSegmento();
+  const { segmento, loading, error} = useGetSegmento();
 
   const handleAutomovilChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
