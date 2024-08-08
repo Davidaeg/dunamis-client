@@ -1,8 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useGetSegmento } from "../../hooks/segmentos/useGetSegmento";
 import { ReservasDB } from "./reservas.types";
 import { useGetAutomovilDisponible } from "../../hooks/automoviles/useGetAutomovilDisponible";
 import { useGetClientesAll } from "../../hooks/clientes/useGetClientesAll";
+import { AgGridReact } from "ag-grid-react";
+import { ColDef } from "ag-grid-community";
 
 interface CreateReservaProps {
   onCreate: (reservas: ReservasDB) => void;
@@ -20,7 +21,8 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
     idCliente: "",
   });
 
-  const { segmento, loading, error } = useGetSegmento();
+  const [selectedAuto, setSelectedAuto] = useState<any>(null);
+
   const {
     automovil,
     loading: LoadReserva,
@@ -39,10 +41,15 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
 
     setReservas((prevReservas) => {
       if (name === "kmIniciales" || name === "kmFinales") {
-        return { ...prevReservas, [name]: parseInt(value) }; // Convertir a int
+        return { ...prevReservas, [name]: parseInt(value) };
       }
       return { ...prevReservas, [name]: value };
     });
+  };
+
+  const handleAutoSelection = (autoPlaca: string) => {
+    setSelectedAuto(autoPlaca);
+    setReservas((prevReservas) => ({ ...prevReservas, placa: autoPlaca }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -64,20 +71,28 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
         placa: "",
         idCliente: "",
       });
+      setSelectedAuto("");
     } catch (error) {
       console.error("Error creando la reserva:", error);
     }
   };
 
-  if (loading || LoadReserva || LoadClientes) {
+  if (LoadReserva || LoadClientes) {
     console.log("Cargando...");
     return null;
   }
 
-  if (error || errReserva || errClientes) {
+  if (errReserva || errClientes) {
     console.error("Error al cargar:");
     return null;
   }
+
+  const autoColumns: ColDef[] = [
+    { headerName: "Placa", field: "placa" },
+    { headerName: "Marca", field: "marca" },
+    { headerName: "Modelo", field: "modelo" },
+    { headerName: "Segmento", field: "segmentoNombre" },
+  ];
 
   return (
     <section>
@@ -152,28 +167,26 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
                   required
                 />
               </div>
-              <div>
-                <label htmlFor="placa" className="block font-medium">
-                  Automovil Disponible
-                </label>
-                <select
-                  id="placa"
-                  name="placa"
-                  value={reservas.placa}
-                  onChange={handleReservaChange}
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                >
-                  <option value="" disabled>
-                    Seleccione un automovil
-                  </option>
-                  {automovil.map((automovil) => (
-                    <option key={automovil.placa} value={automovil.placa}>
-                      {automovil.placa}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <div className="col-span-2"> {/* Ocupa todo el ancho disponible */}
+            <label htmlFor="placa" className="block font-medium">
+              Automovil Disponible
+            </label>
+            <div className="ag-theme-alpine" style={{ height: 200, width: '100%' }}>
+              <AgGridReact
+                rowData={automovil}
+                columnDefs={autoColumns}
+                rowSelection="single"
+                onSelectionChanged={(event) => {
+                  const selectedNodes = event.api.getSelectedNodes();
+                  const selectedData = selectedNodes.map(node => node.data);
+                  if (selectedData.length > 0) {
+                    const selectedPlaca = selectedData[0].placa; // Corregido aquí
+                    handleAutoSelection(selectedPlaca);
+                  }
+                }}
+              />
+            </div>
+          </div>
               <div>
                 <label htmlFor="idCliente" className="block font-medium">
                   Cliente disponible
@@ -202,7 +215,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
                 type="submit"
                 className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-400 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900"
               >
-                Crear Automovil
+                Crear Reserva
               </button>
             </div>
           </div>
