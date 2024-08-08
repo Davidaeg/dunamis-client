@@ -78,7 +78,7 @@ export const Automovil = () => {
             } else if (error) {
               Swal.fire(
                 "Error",
-                error, // Mostrar el mensaje de error específico directamente
+                error,
                 "error"
               );
             }

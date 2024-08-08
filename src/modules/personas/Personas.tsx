@@ -96,7 +96,7 @@ export const Personas = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deletePersona(idPersona)
-          .then((success) => {
+        .then(({ success, error }) => {
             if (success) {
               console.log("Persona eliminada");
               Swal.fire(
@@ -105,6 +105,12 @@ export const Personas = () => {
                 "success"
               );
               refetch();
+            } else if (error) {
+              Swal.fire(
+                "Error",
+                error,
+                "error"
+              );
             }
           })
           .catch((err: any) => {
