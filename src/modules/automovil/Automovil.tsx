@@ -121,7 +121,7 @@ export const Automovil = () => {
     { headerName: "Transmision", field: "transmision" },
     { headerName: "Costo", field: "costo" },
     { headerName: "Disponible", field: "automovilActivo" },
-    { headerName: "Segmento", field: "segmento" },
+    { headerName: "Segmento", field: "segmentoNombre" },
     {
       headerName: "Acciones",
       field: "acciones",

@@ -10,7 +10,7 @@ export const useGetAutomovil = () => {
   const fetchAutomoviles = async () => {
     setLoading(true);
     try {
-      const response = await dunamisApi.get<AutomovilDB[]>("/automoviles");
+      const response = await dunamisApi.get<AutomovilDB[]>("/automovilesDTO");
       setAutomovil(response.data);
       setLoading(false);
     } catch (err) {

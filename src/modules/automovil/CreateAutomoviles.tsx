@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { AutomovilDB } from "./automovil.types";
+import { useGetSegmento } from "../../hooks/segmentos/useGetSegmento";
 
 interface CreateAutomovilProps {
   onCreate: (automovil: AutomovilDB) => void;
@@ -20,16 +21,25 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
     transmision: "",
     costo: 0.0,
     automovilActivo: true,
-    idSegmento:0,
+    idSegmento: 0,
   });
 
-  const handleAutomovilChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const { segmento, loading, error, refetch } = useGetSegmento();
+
+  const handleAutomovilChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setAutomovil((prevAutomovil) => ({
       ...prevAutomovil,
-      [name]: name === "anno" ? parseInt(value) :
-        name === "costo" ? parseFloat(parseFloat(value).toFixed(2)) : // Formatea el costo a dos decimales
-        name === "idSegmento" ? parseInt(value) : value,
+      [name]:
+        name === "anno"
+          ? parseInt(value)
+          : name === "costo"
+          ? parseFloat(parseFloat(value).toFixed(2)) // Formatea el costo a dos decimales
+          : name === "idSegmento"
+          ? parseInt(value)
+          : value,
     }));
   };
 
@@ -56,12 +66,23 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
         transmision: "",
         costo: 0.0,
         automovilActivo: true,
-        idSegmento:0,
+        idSegmento: 0,
       });
     } catch (error) {
       console.error("Error creando automovil:", error);
     }
   };
+
+  if (loading) {
+    console.log("Cargando segmentos...");
+    return null;
+  }
+
+  if (error) {
+    console.error("Error al cargar segmentos:");
+    return null;
+  }
+
   return (
     <section>
       <div>
@@ -258,18 +279,28 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
               </div>
               <div>
                 <label htmlFor="idSegmento" className="block font-medium">
-                  ID Segmento
+                  Segmento
                 </label>
-                <input
-                  type="text"
+                <select
                   id="idSegmento"
                   name="idSegmento"
                   value={automovil.idSegmento}
                   onChange={handleAutomovilChange}
-                  placeholder="ID Segmento"
                   className="mt-1 block w-full border rounded p-2"
                   required
-                />
+                >
+                  <option value={0} disabled>
+                    Seleccione un segmento
+                  </option>
+                  {segmento.map((segmento) => (
+                    <option
+                      key={segmento.idSegmento}
+                      value={segmento.idSegmento}
+                    >
+                      {segmento.nombre}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="mt-6">
@@ -285,7 +316,6 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
       </div>
     </section>
   );
-  
 };
 
 export default CreateAutomoviles;
