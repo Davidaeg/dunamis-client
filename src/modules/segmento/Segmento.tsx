@@ -68,7 +68,7 @@ export const Segmentos = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteSegmento(idSegmento)
-          .then((success) => {
+          .then(({ success, error }) => {
             if (success) {
               console.log("Segmento eliminado");
               Swal.fire(
@@ -77,10 +77,16 @@ export const Segmentos = () => {
                 "success"
               );
               refetch();
+            } else {
+              Swal.fire(
+                "Error",
+                error || "Hubo un error al eliminar el segmento.",
+                "error"
+              );
             }
           })
           .catch((err: any) => {
-            console.error("Error al eliminar segmento:", err);
+            console.error("Error al eliminar el segmento:", err);
             Swal.fire(
               "Error",
               "Hubo un error al eliminar el segmento.",
@@ -90,6 +96,7 @@ export const Segmentos = () => {
       }
     });
   };
+  
 
   const handleUpdate = (idSegmento: string, segmento: SegmentoDB) => {
     updateSegmento(idSegmento, segmento)

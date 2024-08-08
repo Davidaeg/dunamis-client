@@ -3,22 +3,21 @@ import { dunamisApi } from "../../datasources/dunamisApi.service";
 
 export const useDeleteSegmentos = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const deleteSegmento = async (idSegmento: string): Promise<boolean> => {
+  const deleteSegmento = async (idSegmento: string): Promise<{ success: boolean; error: string | null }> => {
     setLoading(true);
     try {
       await dunamisApi.delete(`/segmento/${idSegmento}`);
       setLoading(false);
-      return true;
-    } catch (err) {
-      setError("Error deleting persona");
+      return { success: true, error: null };
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "No se puede eliminar el segmento porque tiene automoviles asociados";
       setLoading(false);
-      return false;
+      return { success: false, error: errorMessage };
     }
   };
 
-  return { deleteSegmento, loading, error };
+  return { deleteSegmento, loading};
 };
 
 

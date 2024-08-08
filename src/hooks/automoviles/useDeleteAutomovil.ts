@@ -3,22 +3,22 @@ import { dunamisApi } from "../../datasources/dunamisApi.service";
 
 export const useDeleteAutomovil = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const deleteAutomovil = async (placa: string): Promise<boolean> => {
+  const deleteAutomovil = async (placa: string): Promise<{ success: boolean; error: string | null }> => {
     setLoading(true);
     try {
       await dunamisApi.delete(`/automovil/${placa}`);
       setLoading(false);
-      return true;
-    } catch (err) {
-      setError("Error deleting automovil");
+      return { success: true, error: null };
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "No se puede eliminar el automóvil porque tiene reservas asociadas";
       setLoading(false);
-      return false;
+      return { success: false, error: errorMessage };
     }
   };
 
-  return { deleteAutomovil, loading, error };
+  return { deleteAutomovil, loading };
 };
+
 
 

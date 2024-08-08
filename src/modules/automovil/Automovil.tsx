@@ -21,7 +21,7 @@ export const Automovil = () => {
   const [showModalEditAuto, setShowModalEditAuto] = useState(false);
 
   const { createAutomovil } = useCreateAutomovil();
-  const { deleteAutomovil } = useDeleteAutomovil();
+  const { deleteAutomovil} = useDeleteAutomovil();
   const { updateAutomovil } = useUpdateAutomovil();
 
   const handleShowModalCreateAuto = () => setShowModalCreateAuto(true);
@@ -67,22 +67,27 @@ export const Automovil = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteAutomovil(placa)
-          .then((success) => {
+          .then(({ success, error }) => {
             if (success) {
-              console.log("Automovil eliminado");
               Swal.fire(
                 "¡Eliminado!",
-                "El automovil ha sido eliminado.",
+                "El automóvil ha sido eliminado.",
                 "success"
               );
               refetch();
+            } else if (error) {
+              Swal.fire(
+                "Error",
+                error, // Mostrar el mensaje de error específico directamente
+                "error"
+              );
             }
           })
           .catch((err: any) => {
-            console.error("Error al eliminar el automovil:", err);
+            console.error("Error al eliminar el automóvil:", err);
             Swal.fire(
               "Error",
-              "Hubo un error al eliminar el automovil.",
+              "Hubo un error al eliminar el automóvil.",
               "error"
             );
           });
