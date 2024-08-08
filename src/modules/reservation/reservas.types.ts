@@ -1,7 +1,7 @@
 export interface ReservasDB {
   idReservacion: string;
-  fechaInicio: Date;
-  fechaFin: Date;
+  fechaInicio: string;
+  fechaFin: string;
   kmIniciales: number;
   kmFinales: number;
   reservacionActivo: boolean;

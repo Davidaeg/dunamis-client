@@ -11,6 +11,7 @@ import { ReservasDB } from "./reservas.types";
 import Modal from "../../components/Modal/Modal";
 import Swal from "sweetalert2";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
+import CreateReservaciones from "./CreateReservaciones";
 
 export const Reservation = () => {
   const { reservas, loading, error, refetch } = useGetReservacion();
@@ -164,6 +165,12 @@ export const Reservation = () => {
           }}
         />
       </div>
+      <Modal
+        isOpen={showModalCreateReserva}
+        onClose={handleCloseModalCreateReserva}
+      >
+        <CreateReservaciones onCreate={handleCreate} />
+      </Modal>
     </div>
   );
 };

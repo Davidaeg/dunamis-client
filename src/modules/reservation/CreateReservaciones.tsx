@@ -1,0 +1,215 @@
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useGetSegmento } from "../../hooks/segmentos/useGetSegmento";
+import { ReservasDB } from "./reservas.types";
+import { useGetAutomovilDisponible } from "../../hooks/automoviles/useGetAutomovilDisponible";
+import { useGetClientesAll } from "../../hooks/clientes/useGetClientesAll";
+
+interface CreateReservaProps {
+  onCreate: (reservas: ReservasDB) => void;
+}
+
+const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
+  const [reservas, setReservas] = useState<ReservasDB>({
+    idReservacion: "",
+    fechaInicio: "",
+    fechaFin: "",
+    kmIniciales: 0,
+    kmFinales: 0,
+    reservacionActivo: true,
+    placa: "",
+    idCliente: "",
+  });
+
+  const { segmento, loading, error } = useGetSegmento();
+  const {
+    automovil,
+    loading: LoadReserva,
+    error: errReserva,
+  } = useGetAutomovilDisponible();
+  const {
+    clientesAll,
+    loading: LoadClientes,
+    error: errClientes,
+  } = useGetClientesAll();
+
+  const handleReservaChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setReservas((prevReservas) => {
+      if (name === "kmIniciales" || name === "kmFinales") {
+        return { ...prevReservas, [name]: parseInt(value) }; // Convertir a int
+      }
+      return { ...prevReservas, [name]: value };
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const reservaData = { ...reservas };
+
+      console.log("Reserva a crear:", reservaData);
+      onCreate(reservaData);
+
+      setReservas({
+        idReservacion: "",
+        fechaInicio: "",
+        fechaFin: "",
+        kmIniciales: 0,
+        kmFinales: 0,
+        reservacionActivo: true,
+        placa: "",
+        idCliente: "",
+      });
+    } catch (error) {
+      console.error("Error creando la reserva:", error);
+    }
+  };
+
+  if (loading || LoadReserva || LoadClientes) {
+    console.log("Cargando...");
+    return null;
+  }
+
+  if (error || errReserva || errClientes) {
+    console.error("Error al cargar:");
+    return null;
+  }
+
+  return (
+    <section>
+      <div>
+        <h2 className="ml-3 mt-3 text-xl font-bold text-gray-900">
+          Crear una nueva Reserva
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 border rounded bg-gray-100"
+        >
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold mb-3">Datos de la Reserva</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="fechaInicio" className="block font-medium">
+                  Fecha Inicio de la reserva
+                </label>
+                <input
+                  type="date"
+                  id="fechaInicio"
+                  name="fechaInicio"
+                  value={reservas.fechaInicio}
+                  onChange={handleReservaChange}
+                  placeholder="Placa del Automovil"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="fechaFin" className="block font-medium">
+                  Fecha final de la reserva
+                </label>
+                <input
+                  type="date"
+                  id="fechaFin"
+                  name="fechaFin"
+                  value={reservas.fechaFin}
+                  onChange={handleReservaChange}
+                  placeholder="Marca del vehiculo"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="kmIniciales" className="block font-medium">
+                  Kilometros iniciales del vehiculo
+                </label>
+                <input
+                  type="text"
+                  id="kmIniciales"
+                  name="kmIniciales"
+                  value={reservas.kmIniciales}
+                  onChange={handleReservaChange}
+                  placeholder="Modelo del vehiculo"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="kmFinales" className="block font-medium">
+                  Kilometros Finales del vehiculo
+                </label>
+                <input
+                  type="text"
+                  id="kmFinales"
+                  name="kmFinales"
+                  value={reservas.kmFinales}
+                  onChange={handleReservaChange}
+                  placeholder="Año del vehiculo"
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="placa" className="block font-medium">
+                  Automovil Disponible
+                </label>
+                <select
+                  id="placa"
+                  name="placa"
+                  value={reservas.placa}
+                  onChange={handleReservaChange}
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                >
+                  <option value="" disabled>
+                    Seleccione un automovil
+                  </option>
+                  {automovil.map((automovil) => (
+                    <option key={automovil.placa} value={automovil.placa}>
+                      {automovil.placa}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="idCliente" className="block font-medium">
+                  Cliente disponible
+                </label>
+                <select
+                  id="idCliente"
+                  name="idCliente"
+                  value={reservas.idCliente}
+                  onChange={handleReservaChange}
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                >
+                  <option value="" disabled>
+                    Seleccione un cliente
+                  </option>
+                  {clientesAll.map((cliente) => (
+                    <option key={cliente.idCliente} value={cliente.idCliente}>
+                      {cliente.idCliente}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="mt-6">
+              <button
+                type="submit"
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-400 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900"
+              >
+                Crear Automovil
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+};
+
+export default CreateReservaciones;
