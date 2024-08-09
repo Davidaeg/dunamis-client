@@ -51,7 +51,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
 
   const [usuarios, setUsuarios] = useState<UsuariosDB>({
     idUsuario: "",
-    nombreUsuario: "",
+    emailUsuario: "",
     contrasenna: "",
     idRol: "",
     idPersona: "",
@@ -158,7 +158,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
       });
       setUsuarios({
         idUsuario: "",
-        nombreUsuario: "",
+        emailUsuario: "",
         contrasenna: "",
         idRol: "",
         idPersona: "",
@@ -183,7 +183,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
             <h3 className="text-lg font-bold mb-3">Datos de Persona</h3>
             <div>
               <label htmlFor="idPersona" className="block font-medium">
-                Cédula Cliente
+                N° Cédula Cliente
               </label>
               <input
                 type="text"
@@ -191,7 +191,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 name="idPersona"
                 value={persona.idPersona}
                 onChange={handleChange}
-                placeholder="Cédula"
+                placeholder="N° Cédula"
                 className="mt-1 block w-full border rounded p-2"
                 required
               />
@@ -405,7 +405,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 <h3 className="text-lg font-bold mt-4">Datos de Cliente</h3>
                 <div>
                   <label htmlFor="idCliente" className="block font-medium mt-2">
-                    ID Cliente
+                    N° Licencia
                   </label>
                   <input
                     type="text"
@@ -413,7 +413,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                     name="idCliente"
                     value={clientes.idCliente}
                     onChange={handleClienteChange}
-                    placeholder="ID Cliente"
+                    placeholder="N° Licencia"
                     className="mt-1 block w-full border rounded p-2"
                     required
                   />
@@ -494,18 +494,18 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 <h3 className="text-lg font-bold mt-4">Datos del Usuario</h3>
                 <div>
                   <label
-                    htmlFor="nombreUsuario"
+                    htmlFor="emailUsuario"
                     className="block font-medium mt-2"
                   >
-                    Nombre de Usuario:
+                    Email de Usuario:
                   </label>
                   <input
-                    type="text"
-                    id="nombreUsuario"
-                    name="nombreUsuario"
-                    value={usuarios.nombreUsuario}
+                    type="email"
+                    id="emailUsuario"
+                    name="emailUsuario"
+                    value={usuarios.emailUsuario}
                     onChange={handleUsuarioChange}
-                    placeholder="Nombre de Usuario"
+                    placeholder="Email de Usuario"
                     className="mt-1 block w-full border rounded p-2"
                     required
                   />

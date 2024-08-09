@@ -59,7 +59,7 @@ export const Clientes = ({ idPersona }: ClientesProps) => {
       {selectedClientes && (
         <form onSubmit={handleSubmit} className="p-4 border rounded bg-gray-100">
           <div className="mt-2">
-            <label htmlFor="idCliente" className="block font-medium">ID Cliente:</label>
+            <label htmlFor="idCliente" className="block font-medium">N° Licencia:</label>
             <input
               id="idCliente"
               type="text"

@@ -67,11 +67,11 @@ export const Usuarios = ({ idPersona }: UsuariosProps) => {
             />
           </div>
           <div className="mt-2">
-            <label htmlFor="nombreUsuario" className="block font-medium">Nombre de Usuario:</label>
+            <label htmlFor="emailUsuario" className="block font-medium">Email de Usuario:</label>
             <input
-              id="nombreUsuario"
-              type="text"
-              value={selectedUsuarios.nombreUsuario}
+              id="emailUsuario"
+              type="email"
+              value={selectedUsuarios.emailUsuario}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
             />
