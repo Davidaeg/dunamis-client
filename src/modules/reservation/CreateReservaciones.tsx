@@ -22,6 +22,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
   });
 
   const [selectedAuto, setSelectedAuto] = useState<any>(null);
+  const [selectedCliente, setSelectedCliente] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -53,11 +54,21 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
     setReservas((prevReservas) => ({ ...prevReservas, placa: autoPlaca }));
   };
 
+  const handleClienteSelection = (Cliente: string) => {
+    setSelectedCliente(Cliente);
+    setReservas((prevReservas) => ({ ...prevReservas, idCliente: Cliente }));
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!selectedAuto) {
       setError(" Seleccionar vehículo para agregar la nueva reserva");
+      return;
+    }
+  
+    if (!selectedCliente) {
+      setError(" Seleccionar cliente para agregar la nueva reserva");
       return;
     }
 
@@ -78,6 +89,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
         idCliente: "",
       });
       setSelectedAuto(null);
+      setSelectedCliente(null);
       setError(null);
     } catch (error) {
       console.error("Error creando la reserva:", error);
@@ -99,6 +111,12 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
     { headerName: "Marca", field: "marca" },
     { headerName: "Modelo", field: "modelo" },
     { headerName: "Segmento", field: "segmentoNombre" },
+  ];
+
+  const clienteColumns: ColDef[] = [
+    { headerName: "N° Licencia", field: "idCliente" },
+    { headerName: "Categoria Licencia", field: "categoriaLicencia" },
+    { headerName: "Estado", field: "estado" },
   ];
 
   return (
@@ -214,27 +232,36 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="col-span-2">
                 <label htmlFor="idCliente" className="block font-medium">
-                  Cliente disponible
+                  Cliente Disponible
                 </label>
-                <select
-                  id="idCliente"
-                  name="idCliente"
-                  value={reservas.idCliente}
-                  onChange={handleReservaChange}
-                  className="mt-1 block w-full border rounded p-2"
-                  required
+                <div
+                  className="ag-theme-alpine"
+                  style={{ height: 200, width: "100%" }}
                 >
-                  <option value="" disabled>
-                    Seleccione un cliente
-                  </option>
-                  {clientesAll.map((cliente) => (
-                    <option key={cliente.idCliente} value={cliente.idCliente}>
-                      {cliente.idCliente}
-                    </option>
-                  ))}
-                </select>
+                  <AgGridReact
+                    rowData={clientesAll}
+                    columnDefs={clienteColumns}
+                    defaultColDef={{
+                      sortable: true,
+                      filter: true,
+                      resizable: true,
+                      flex: 1,
+                    }}
+                    rowSelection="single"
+                    onSelectionChanged={(event) => {
+                      const selectedClienteNodes = event.api.getSelectedNodes();
+                      const selectedClienteData = selectedClienteNodes.map(
+                        (node) => node.data
+                      );
+                      if (selectedClienteData.length > 0) {
+                        const selectedCliente = selectedClienteData[0].idCliente;
+                        handleClienteSelection(selectedCliente);
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </div>
             <div className="mt-6">

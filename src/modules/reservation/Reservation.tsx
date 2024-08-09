@@ -12,6 +12,7 @@ import Modal from "../../components/Modal/Modal";
 import Swal from "sweetalert2";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
 import CreateReservaciones from "./CreateReservaciones";
+import UpdateReservaciones from "./UpdateReservaciones";
 
 export const Reservation = () => {
   const { reservas, loading, error, refetch } = useGetReservacion();
@@ -170,6 +171,10 @@ export const Reservation = () => {
         onClose={handleCloseModalCreateReserva}
       >
         <CreateReservaciones onCreate={handleCreate} />
+      </Modal>
+
+      <Modal isOpen={showModalEditReserva} onClose={handleCloseModalEditReserva}>
+        <UpdateReservaciones reservas={selectedReserva} onUpdate={handleUpdate} />
       </Modal>
     </div>
   );
