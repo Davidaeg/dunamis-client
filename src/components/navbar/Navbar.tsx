@@ -12,7 +12,6 @@ export const Navbar = () => {
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white flex space-x-4">
-          {/* Renderiza solo los elementos del navbar que no están en el dropdown */}
           {appRoutes
             .filter(
               (route) =>
@@ -30,7 +29,6 @@ export const Navbar = () => {
               </Link>
             ))}
 
-          {/* Dropdown Menu */}
           <div className="relative">
             <Menu as="div" className="relative inline-block text-left">
               <div>

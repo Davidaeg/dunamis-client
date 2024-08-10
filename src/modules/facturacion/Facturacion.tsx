@@ -1,4 +1,4 @@
-export const Home = () => {
+export const Facturacion = () => {
   return (
     <div className="container mx-auto p-6 bg-gray-100">
       <header className="bg-blue-500 text-white p-4 rounded-lg shadow-lg">
