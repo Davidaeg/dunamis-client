@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+
 import {
   PersonaDB,
   DireccionDB,
@@ -16,7 +17,6 @@ interface CreatePersonaProps {
     isUsuario?: boolean
   ) => void;
 }
-
 
 const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
   const [persona, setPersona] = useState<PersonaDB>({
@@ -51,7 +51,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
 
   const [usuarios, setUsuarios] = useState<UsuariosDB>({
     idUsuario: "",
-    nombreUsuario: "",
+    emailUsuario: "",
     contrasenna: "",
     idRol: "",
     idPersona: "",
@@ -86,19 +86,13 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
     setClientes((prevCliente) => ({ ...prevCliente, [name]: value }));
   };
 
-  const handleUsuarioChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleUsuarioChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setUsuarios((prevUsuario) => ({ ...prevUsuario, [name]: value }));
   };
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    if (name === "isCliente") {
-      setIsCliente(checked);
-    } else if (name === "isUsuario") {
-      setIsUsuario(checked);
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -115,8 +109,19 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
         usuariosData = usuarios;
       }
 
-      console.log("Persona a crear:", personaData, direccion, clientesData, usuariosData);
-      onCreate(personaData, direccion, isCliente ? clientesData : undefined, isUsuario ? usuariosData : undefined);
+      console.log(
+        "Persona a crear:",
+        personaData,
+        direccion,
+        clientesData,
+        usuariosData
+      );
+      onCreate(
+        personaData,
+        direccion,
+        isCliente ? clientesData : undefined,
+        isUsuario ? usuariosData : undefined
+      );
 
       setPersona({
         idPersona: "",
@@ -147,14 +152,13 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
       });
       setUsuarios({
         idUsuario: "",
-        nombreUsuario: "",
+        emailUsuario: "",
         contrasenna: "",
         idRol: "",
         idPersona: "",
       });
       setIsCliente(false);
       setIsUsuario(false);
-
     } catch (error) {
       console.error("Error creando persona:", error);
     }
@@ -173,7 +177,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
             <h3 className="text-lg font-bold mb-3">Datos de Persona</h3>
             <div>
               <label htmlFor="idPersona" className="block font-medium">
-                Cédula Cliente
+                N° Cédula Cliente
               </label>
               <input
                 type="text"
@@ -181,7 +185,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 name="idPersona"
                 value={persona.idPersona}
                 onChange={handleChange}
-                placeholder="Cédula"
+                placeholder="N° Cédula"
                 className="mt-1 block w-full border rounded p-2"
                 required
               />
@@ -360,165 +364,192 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 required
               />
             </div>
-            </div>
-            <div className="space-y-4">
-            <div>
-            <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
-            <div>
-              <input
-                type="checkbox"
-                id="isCliente"
-                name="isCliente"
-                checked={isCliente}
-                onChange={handleCheckboxChange}
-              />
-              <label htmlFor="isCliente" className="ml-2">
-                Cliente
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                type="checkbox"
-                id="isUsuario"
-                name="isUsuario"
-                checked={isUsuario}
-                onChange={handleCheckboxChange}
-              />
-              <label htmlFor="isUsuario" className="ml-2">
-                Usuario
-              </label>
-            </div>
           </div>
-
-          {isCliente && (
+          <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-bold mt-4">Datos de Cliente</h3>
+              <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
               <div>
-                <label htmlFor="idCliente" className="block font-medium mt-2">
-                  ID Cliente
-                </label>
                 <input
-                  type="text"
-                  id="idCliente"
-                  name="idCliente"
-                  value={clientes.idCliente}
-                  onChange={handleClienteChange}
-                  placeholder="ID Cliente"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
+                  type="radio"
+                  id="isCliente"
+                  name="personaTipo"
+                  value="cliente"
+                  checked={isCliente}
+                  onChange={() => {
+                    setIsCliente(true);
+                    setIsUsuario(false);
+                  }}
                 />
+                <label htmlFor="isCliente" className="ml-2">
+                  Cliente
+                </label>
               </div>
-              <div>
-                <label htmlFor="categoriaLicencia" className="block font-medium mt-4">
-                  Categoria Licencia
-                </label>
+              <div className="mt-2">
                 <input
-                  type="text"
-                  id="categoriaLicencia"
-                  name="categoriaLicencia"
-                  value={clientes.categoriaLicencia}
-                  onChange={handleClienteChange}
-                  placeholder="Categoria Licencia"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
+                  type="radio"
+                  id="isUsuario"
+                  name="personaTipo"
+                  value="usuario"
+                  checked={isUsuario}
+                  onChange={() => {
+                    setIsCliente(false);
+                    setIsUsuario(true);
+                  }}
                 />
-              </div>
-              <div>
-                <label htmlFor="fechaEmisionLicencia" className="block font-medium mt-4">
-                  Fecha Emision Licencia
+                <label htmlFor="isUsuario" className="ml-2">
+                  Usuario
                 </label>
-                <input
-                  type="date"
-                  id="fechaEmisionLicencia"
-                  name="fechaEmisionLicencia"
-                  value={clientes.fechaEmisionLicencia}
-                  onChange={handleClienteChange}
-                  placeholder="Fecha Emision Licencia"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="fechaVencimientoLicencia" className="block font-medium mt-4">
-                  Fecha Vencimiento Licencia
-                </label>
-                <input
-                  type="date"
-                  id="fechaVencimientoLicencia"
-                  name="fechaVencimientoLicencia"
-                  value={clientes.fechaVencimientoLicencia}
-                  onChange={handleClienteChange}
-                  placeholder="Fecha Vencimiento Licencia"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="estado" className="block font-medium mt-4">
-                  Estado
-                </label>
-                <input
-                  type="text"
-                  id="estado"
-                  name="estado"
-                  value={clientes.estado}
-                  onChange={handleClienteChange}
-                  placeholder="Estado"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
               </div>
             </div>
+
+            {isCliente && (
+              <div>
+                <h3 className="text-lg font-bold mt-4">Datos de Cliente</h3>
+                <div>
+                  <label htmlFor="idCliente" className="block font-medium mt-2">
+                    N° Licencia
+                  </label>
+                  <input
+                    type="text"
+                    id="idCliente"
+                    name="idCliente"
+                    value={clientes.idCliente}
+                    onChange={handleClienteChange}
+                    placeholder="N° Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="categoriaLicencia"
+                    className="block font-medium mt-4"
+                  >
+                    Categoria Licencia
+                  </label>
+                  <input
+                    type="text"
+                    id="categoriaLicencia"
+                    name="categoriaLicencia"
+                    value={clientes.categoriaLicencia}
+                    onChange={handleClienteChange}
+                    placeholder="Categoria Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="fechaEmisionLicencia"
+                    className="block font-medium mt-4"
+                  >
+                    Fecha Emision Licencia
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaEmisionLicencia"
+                    name="fechaEmisionLicencia"
+                    value={clientes.fechaEmisionLicencia}
+                    onChange={handleClienteChange}
+                    placeholder="Fecha Emision Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="fechaVencimientoLicencia"
+                    className="block font-medium mt-4"
+                  >
+                    Fecha Vencimiento Licencia
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaVencimientoLicencia"
+                    name="fechaVencimientoLicencia"
+                    value={clientes.fechaVencimientoLicencia}
+                    onChange={handleClienteChange}
+                    placeholder="Fecha Vencimiento Licencia"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="estado" className="block font-medium mt-4">
+                    Estado
+                  </label>
+                  <input
+                    type="text"
+                    id="estado"
+                    name="estado"
+                    value={clientes.estado}
+                    onChange={handleClienteChange}
+                    placeholder="Estado"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+              </div>
             )}
             {isUsuario && (
-            <div>
-              <h3 className="text-lg font-bold mt-4">Datos del Usuario</h3>
               <div>
-                <label htmlFor="nombreUsuario" className="block font-medium mt-2">
-                  Nombre de Usuario:
-                </label>
-                <input
-                  type="text"
-                  id="nombreUsuario"
-                  name="nombreUsuario"
-                  value={usuarios.nombreUsuario}
-                  onChange={handleUsuarioChange}
-                  placeholder="Nombre de Usuario"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
+                <h3 className="text-lg font-bold mt-4">Datos del Usuario</h3>
+                <div>
+                  <label
+                    htmlFor="emailUsuario"
+                    className="block font-medium mt-2"
+                  >
+                    Email de Usuario:
+                  </label>
+                  <input
+                    type="email"
+                    id="emailUsuario"
+                    name="emailUsuario"
+                    value={usuarios.emailUsuario}
+                    onChange={handleUsuarioChange}
+                    placeholder="Email de Usuario"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="contrasenna"
+                    className="block font-medium mt-4"
+                  >
+                    Contraseña:
+                  </label>
+                  <input
+                    type="text"
+                    id="contrasenna"
+                    name="contrasenna"
+                    value={usuarios.contrasenna}
+                    onChange={handleUsuarioChange}
+                    placeholder="Contraseña"
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="idRol" className="block font-medium mt-4">
+                    Rol:
+                  </label>
+                  <select
+                    id="idRol"
+                    name="idRol"
+                    value={usuarios.idRol}
+                    onChange={handleUsuarioChange}
+                    className="mt-1 block w-full border rounded p-2"
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecciona un rol
+                    </option>
+                    <option value="Admin">Administrador</option>
+                    <option value="Empleado">Empleado</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label htmlFor="contrasenna" className="block font-medium mt-4">
-                  Contraseña:
-                </label>
-                <input
-                  type="text"
-                  id="contrasenna"
-                  name="contrasenna"
-                  value={usuarios.contrasenna}
-                  onChange={handleUsuarioChange}
-                  placeholder="Contraseña"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="idRol" className="block font-medium mt-4">
-                  Rol:
-                </label>
-                <input
-                  type="text"
-                  id="idRol"
-                  name="idRol"
-                  value={usuarios.idRol}
-                  onChange={handleUsuarioChange}
-                  placeholder="Rol"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-            </div>
             )}
             <div className="mt-6">
               <button

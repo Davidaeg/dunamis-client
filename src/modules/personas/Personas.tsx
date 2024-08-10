@@ -15,7 +15,12 @@ import Swal from "sweetalert2";
 import Modal from "../../components/Modal/Modal";
 import UpdatePersonas from "./UpdatePersonas";
 import { Direccion } from "../direcciones/Direcciones";
-import { ClientesDB, DireccionDB, PersonaDB, UsuariosDB } from "./persona.types";
+import {
+  ClientesDB,
+  DireccionDB,
+  PersonaDB,
+  UsuariosDB,
+} from "./persona.types";
 import { Clientes } from "../clientes/Clientes";
 import { Usuarios } from "../users/Usuarios";
 import { useCreateUsuario } from "../../hooks/user/useCreateUsers";
@@ -96,7 +101,7 @@ export const Personas = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deletePersona(idPersona)
-          .then((success) => {
+          .then(({ success, error }) => {
             if (success) {
               console.log("Persona eliminada");
               Swal.fire(
@@ -105,6 +110,8 @@ export const Personas = () => {
                 "success"
               );
               refetch();
+            } else if (error) {
+              Swal.fire("Error", error, "error");
             }
           })
           .catch((err: any) => {
@@ -127,22 +134,22 @@ export const Personas = () => {
   ) => {
     const isCliente = Boolean(clientes);
     const isUsuario = Boolean(usuarios);
-  
+
     try {
       // Crear persona y dirección siempre
       await createPersona(persona);
       await createDireccion(direccion);
-  
+
       // Crear cliente si se proporcionó
       if (isCliente && clientes) {
         await createCliente(clientes);
       }
-  
+
       // Crear usuario si se proporcionó
       if (isUsuario && usuarios) {
         await createUsuario(usuarios);
       }
-  
+
       Swal.fire(
         "¡Creado!",
         "La persona y su dirección han sido creadas." +
@@ -191,24 +198,47 @@ export const Personas = () => {
     { headerName: "Numero Telefono", field: "numeroTelefono" },
     { headerName: "Numero Celular", field: "numeroCelular" },
     { headerName: "Email", field: "email" },
-    { headerName: "Dirección",
+    {
+      headerName: "Dirección",
       field: "direcciones",
       cellRenderer: (params: any) => (
-        <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleAddress(params.data)}>Ver Direcciones</button>
-      )
+        <button
+          className="underline hover:text-blue-950 text-blue-500"
+          onClick={() => handleAddress(params.data)}
+        >
+          Ver Direcciones
+        </button>
+      ),
     },
-    { headerName: "Rol",
+    {
+      headerName: "Rol",
       field: "rol",
-      cellRenderer: (params: any) => {
+      filter: true,
+      valueGetter: (params: any) => {
         const { clientes, usuarios } = params.data;
         if (clientes.length > 0) {
-          return <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleClientes(params.data)}>Cliente</button>;
+          return "Cliente";
         } else if (usuarios.length > 0) {
-          return <button className="underline hover:text-blue-950 text-blue-500" onClick={() => handleUsuario(params.data)}>Personal</button>;
+          return "Personal";
         } else {
-          return <span>No definido</span>;
+          return "No definido";
         }
-      }
+      },
+      cellRenderer: (params: any) => {
+        const rol = params.value;
+        return (
+          <span
+            className="underline hover:text-blue-950 text-blue-500"
+            onClick={() =>
+              rol === "Cliente"
+                ? handleClientes(params.data)
+                : handleUsuario(params.data)
+            }
+          >
+            {rol}
+          </span>
+        );
+      },
     },
     {
       headerName: "Acciones",
@@ -266,29 +296,17 @@ export const Personas = () => {
         <UpdatePersonas persona={selectedPersona} onUpdate={handleUpdate} />
       </Modal>
       <Modal isOpen={showModalAddress} onClose={handleCloseModalAddress}>
-        {selectedPersona && (
-          <Direccion idPersona={selectedPersona.idPersona} />
-        )}
+        {selectedPersona && <Direccion idPersona={selectedPersona.idPersona} />}
       </Modal>
-
 
       <Modal isOpen={showModalClientes} onClose={handleCloseModalClientes}>
-        {selectedPersona && (
-          <Clientes idPersona={selectedPersona.idPersona} />
-        )}
+        {selectedPersona && <Clientes idPersona={selectedPersona.idPersona} />}
       </Modal>
       <Modal isOpen={showModalUsuario} onClose={handleCloseModalUsuarios}>
-        {selectedPersona && (
-          <Usuarios idPersona={selectedPersona.idPersona} />
-        )}
+        {selectedPersona && <Usuarios idPersona={selectedPersona.idPersona} />}
       </Modal>
-
-
-
     </div>
   );
 };
 
 export default Personas;
-
-

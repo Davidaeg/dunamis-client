@@ -31,7 +31,7 @@ export interface ClientesDB {
 }
 export interface UsuariosDB {
   idUsuario: string;
-  nombreUsuario: string;
+  emailUsuario: string;
   contrasenna: string;
   idRol: string;
   idPersona: string;
@@ -45,7 +45,7 @@ export interface RolesDB {
 
 export interface UsuarioDTO {
   idUsuario: string;
-  nombreUsuario: string;
+  emailUsuario: string;
   contrasenna: string;
   idRol: string;
   idPersona: string;
