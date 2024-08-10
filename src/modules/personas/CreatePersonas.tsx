@@ -86,19 +86,13 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
     setClientes((prevCliente) => ({ ...prevCliente, [name]: value }));
   };
 
-  const handleUsuarioChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleUsuarioChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setUsuarios((prevUsuario) => ({ ...prevUsuario, [name]: value }));
   };
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    if (name === "isCliente") {
-      setIsCliente(checked);
-    } else if (name === "isUsuario") {
-      setIsUsuario(checked);
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -376,11 +370,15 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
               <h3 className="text-lg font-bold mt-4">Tipo de Persona</h3>
               <div>
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="isCliente"
-                  name="isCliente"
+                  name="personaTipo"
+                  value="cliente"
                   checked={isCliente}
-                  onChange={handleCheckboxChange}
+                  onChange={() => {
+                    setIsCliente(true);
+                    setIsUsuario(false);
+                  }}
                 />
                 <label htmlFor="isCliente" className="ml-2">
                   Cliente
@@ -388,11 +386,15 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
               </div>
               <div className="mt-2">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="isUsuario"
-                  name="isUsuario"
+                  name="personaTipo"
+                  value="usuario"
                   checked={isUsuario}
-                  onChange={handleCheckboxChange}
+                  onChange={() => {
+                    setIsCliente(false);
+                    setIsUsuario(true);
+                  }}
                 />
                 <label htmlFor="isUsuario" className="ml-2">
                   Usuario
@@ -532,16 +534,20 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                   <label htmlFor="idRol" className="block font-medium mt-4">
                     Rol:
                   </label>
-                  <input
-                    type="text"
+                  <select
                     id="idRol"
                     name="idRol"
                     value={usuarios.idRol}
                     onChange={handleUsuarioChange}
-                    placeholder="Rol"
                     className="mt-1 block w-full border rounded p-2"
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                      Selecciona un rol
+                    </option>
+                    <option value="Admin">Administrador</option>
+                    <option value="Empleado">Empleado</option>
+                  </select>
                 </div>
               </div>
             )}
