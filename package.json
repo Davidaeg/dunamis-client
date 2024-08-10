@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
+    "@heroicons/react": "^2.1.5",
     "@types/react-router-dom": "^5.3.3",
     "ag-grid-community": "^31.3.2",
     "ag-grid-react": "^31.3.2",
