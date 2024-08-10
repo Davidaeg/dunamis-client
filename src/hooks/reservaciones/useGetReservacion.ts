@@ -10,7 +10,7 @@ export const useGetReservacion = () => {
   const fetchReservaciones = async () => {
     setLoading(true);
     try {
-      const response = await dunamisApi.get<ReservasDB[]>("/reservaciones");
+      const response = await dunamisApi.get<ReservasDB[]>("/reservacionesDTO");
       setReservas(response.data);
       setLoading(false);
     } catch (err) {

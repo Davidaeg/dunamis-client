@@ -7,4 +7,15 @@ export interface ReservasDB {
   reservacionActivo: boolean;
   placa: string;
   idCliente: string;
+  cliente?: ClientesDB[];
+}
+
+export interface ClientesDB {
+  idCliente: string;
+  categoriaLicencia: string;
+  fechaEmisionLicencia: string;
+  fechaVencimientoLicencia: string;
+  estado: string;
+  idPersona: string;
+  
 }
