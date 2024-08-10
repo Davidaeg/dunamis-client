@@ -115,7 +115,7 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
 
   const clienteColumns: ColDef[] = [
     { headerName: "N° Licencia", field: "idCliente" },
-    { headerName: "Categoria Licencia", field: "categoriaLicencia" },
+    { headerName: "Vencimiento Licencia", field: "fechaVencimientoLicencia" },
     { headerName: "Estado", field: "estado" },
   ];
 
