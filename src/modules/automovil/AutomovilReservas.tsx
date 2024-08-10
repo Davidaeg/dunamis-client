@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useGetAutomovilByID } from '../../hooks/automoviles/useGetAutomovilByID';
+import React, { useEffect, useState } from "react";
+import { useGetAutomovilByID } from "../../hooks/automoviles/useGetAutomovilByID";
 
 interface AutomovilReservasProps {
   placa: string;
@@ -38,9 +38,14 @@ export const AutomovilReservas = ({ placa }: AutomovilReservasProps) => {
   return (
     <div>
       {selectedAutomovil ? (
-        <form onSubmit={handleSubmit} className="p-4 border rounded bg-gray-100">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 border rounded bg-gray-100"
+        >
           <div className="mt-2">
-            <label htmlFor="placa" className="block font-medium">Categoría de Licencia:</label>
+            <label htmlFor="placa" className="block font-medium">
+              Placa del Vehículo:
+            </label>
             <input
               id="placa"
               type="text"
@@ -51,44 +56,79 @@ export const AutomovilReservas = ({ placa }: AutomovilReservasProps) => {
             />
           </div>
           <div className="mt-2">
-            <label htmlFor="categoriaLicencia" className="block font-medium">Categoría de Licencia:</label>
+            <label htmlFor="marca" className="block font-medium">
+              Marca:
+            </label>
             <input
-              id="categoriaLicencia"
+              id="marca"
               type="text"
-              value={selectedAutomovil.categoriaLicencia}
+              value={selectedAutomovil.marca}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
               readOnly
             />
           </div>
           <div className="mt-2">
-            <label htmlFor="fechaEmisionLicencia" className="block font-medium">Fecha de Emisión de la Licencia:</label>
+            <label htmlFor="modelo" className="block font-medium">
+              Modelo:
+            </label>
             <input
-              id="fechaEmisionLicencia"
+              id="modelo"
               type="text"
-              value={selectedAutomovil.fechaEmisionLicencia}
+              value={selectedAutomovil.modelo}
+              onChange={handleChange}
+              className="mt-1 block w-full border rounded p-2"
+              readOnly
+            />
+          </div>
+
+          <div className="mt-2">
+            <label htmlFor="anno" className="block font-medium">
+              Año:
+            </label>
+            <input
+              id="anno"
+              type="number"
+              value={selectedAutomovil.anno}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
               readOnly
             />
           </div>
           <div className="mt-2">
-            <label htmlFor="fechaVencimientoLicencia" className="block font-medium">Fecha de Vencimiento de la Licencia:</label>
+            <label htmlFor="color" className="block font-medium">
+              Color:
+            </label>
             <input
-              id="fechaVencimientoLicencia"
+              id="color"
               type="text"
-              value={selectedAutomovil.fechaVencimientoLicencia}
+              value={selectedAutomovil.color}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
               readOnly
             />
           </div>
           <div className="mt-2">
-            <label htmlFor="estado" className="block font-medium">Estado:</label>
+            <label htmlFor="estilo" className="block font-medium">
+              Estilo:
+            </label>
             <input
-              id="estado"
+              id="estilo"
               type="text"
-              value={selectedAutomovil.estado}
+              value={selectedAutomovil.estilo}
+              onChange={handleChange}
+              className="mt-1 block w-full border rounded p-2"
+              readOnly
+            />
+          </div>
+          <div className="mt-2">
+            <label htmlFor="segmentoNombre" className="block font-medium">
+              Segmento Nombre:
+            </label>
+            <input
+              id="segmentoNombre"
+              type="text"
+              value={selectedAutomovil.segmentoNombre}
               onChange={handleChange}
               className="mt-1 block w-full border rounded p-2"
               readOnly
@@ -96,12 +136,8 @@ export const AutomovilReservas = ({ placa }: AutomovilReservasProps) => {
           </div>
         </form>
       ) : (
-        <div>No hay datos del cliente</div>
+        <div>No hay datos del automovil</div>
       )}
     </div>
   );
 };
-
-
-
-

@@ -10,7 +10,7 @@ export const useGetAutomovilByID = (placa: string) => {
   const fetchAutomovilesById = async () => {
     setLoading(true);
     try {
-      const response = await dunamisApi.get<AutomovilDB[]>(`/automovil/${placa}`);
+      const response = await dunamisApi.get<AutomovilDB[]>(`/automovilDTO/${placa}`);
       setAutomovil(response.data);
     } catch (err) {
       console.error('Error fetching data:', err);
