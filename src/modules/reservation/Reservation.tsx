@@ -13,6 +13,8 @@ import Swal from "sweetalert2";
 import ActionButtons from "../../components/ActionButtons/ActionButtons";
 import CreateReservaciones from "./CreateReservaciones";
 import UpdateReservaciones from "./UpdateReservaciones";
+import { ClientesReservas } from "../clientes/ClientesReservas";
+import { AutomovilReservas } from "../automovil/AutomovilReservas";
 
 export const Reservation = () => {
   const { reservas, loading, error, refetch } = useGetReservacion();
@@ -24,16 +26,37 @@ export const Reservation = () => {
   const { deleteReservacion } = useDeleteReservacion();
   const { updateReservacion } = useUpdateReservacion();
 
+  const [showModalEditCliente, setShowModalEditCliente] = useState(false);
+  const [showModalEditAutomovil, setShowModalEditAutomovil] = useState(false);
+  const [selectedClienteId, setSelectedClienteId] = useState<string | null>(null);
+  const [selectedAutomovilId, setSelectedAutomovilId] = useState<string | null>(null);
+
   const handleShowModalCreateReserva = () => setShowModalCreateReserva(true);
   const handleShowModalEditReserva = () => setShowModalEditReserva(true);
-
-  const handleCloseModalCreateReserva = () => {
-    setShowModalCreateReserva(false);
-  };
-
+  const handleCloseModalCreateReserva = () => setShowModalCreateReserva(false);
   const handleCloseModalEditReserva = () => {
     setShowModalEditReserva(false);
     setSelectedReserva(null);
+  };
+
+  const handleShowModalWithCliente = (idCliente: string) => {
+    setSelectedClienteId(idCliente);
+    setShowModalEditCliente(true);
+  };
+
+  const handleShowModalWithAutomovil = (placa: string) => {
+    setSelectedAutomovilId(placa);
+    setShowModalEditAutomovil(true);
+  };
+
+  const handleCloseModalWithCliente = () => {
+    setShowModalEditCliente(false);
+    setSelectedClienteId(null);
+  };
+
+  const handleCloseModalWithAutomovil = () => {
+    setShowModalEditAutomovil(false);
+    setSelectedAutomovilId(null);
   };
 
   const handleEdit = (reservas: any) => {
@@ -44,7 +67,6 @@ export const Reservation = () => {
   const handleCreate = async (reservas: ReservasDB) => {
     try {
       await createReservacion(reservas);
-
       Swal.fire("¡Creado!", "La reserva ha sido creada.", "success");
       refetch();
       handleCloseModalCreateReserva();
@@ -69,11 +91,7 @@ export const Reservation = () => {
         deleteReservacion(idReservacion)
           .then(({ success, error }) => {
             if (success) {
-              Swal.fire(
-                "¡Eliminado!",
-                "La reserva ha sido eliminada.",
-                "success"
-              );
+              Swal.fire("¡Eliminado!", "La reserva ha sido eliminada.", "success");
               refetch();
             } else if (error) {
               Swal.fire("Error", error, "error");
@@ -81,11 +99,7 @@ export const Reservation = () => {
           })
           .catch((err: any) => {
             console.error("Error al eliminar la reserva:", err);
-            Swal.fire(
-              "Error",
-              "Hubo un error al eliminar la reserva.",
-              "error"
-            );
+            Swal.fire("Error", "Hubo un error al eliminar la reserva.", "error");
           });
       }
     });
@@ -95,11 +109,7 @@ export const Reservation = () => {
     updateReservacion(idReservacion, reservas)
       .then((updatedReserva) => {
         console.log("Reserva actualizada", updatedReserva);
-        Swal.fire(
-          "¡Actualizado!",
-          "La reserva ha sido actualizada.",
-          "success"
-        );
+        Swal.fire("¡Actualizado!", "La reserva ha sido actualizada.", "success");
         refetch();
         handleCloseModalEditReserva();
       })
@@ -115,8 +125,36 @@ export const Reservation = () => {
     { headerName: "Fecha Fin", field: "fechaFin" },
     { headerName: "Kilometros iniciales", field: "kmIniciales" },
     { headerName: "Kilometros Finales", field: "kmFinales" },
-    { headerName: "Datos del vehiculo", field: "placa" },
-    { headerName: "Datos del cliente", field: "idCliente" },
+    { headerName: "Datos del vehiculo", field: "autoPlaca",
+      cellRenderer: (params: any) => (
+        <span
+          style={{
+            cursor: "pointer",
+            color: "blue",
+            textDecoration: "underline",
+          }}
+          onClick={() => handleShowModalWithAutomovil(params.value)}
+        >
+          {params.value}
+        </span>
+      ),
+     },
+    {
+      headerName: "Datos del cliente",
+      field: "idCliente",
+      cellRenderer: (params: any) => (
+        <span
+          style={{
+            cursor: "pointer",
+            color: "blue",
+            textDecoration: "underline",
+          }}
+          onClick={() => handleShowModalWithCliente(params.value)}
+        >
+          {params.value}
+        </span>
+      ),
+    },
     { headerName: "Estado de la reserva", field: "reservacionActivo" },
     {
       headerName: "Acciones",
@@ -173,9 +211,30 @@ export const Reservation = () => {
         <CreateReservaciones onCreate={handleCreate} />
       </Modal>
 
-      <Modal isOpen={showModalEditReserva} onClose={handleCloseModalEditReserva}>
-        <UpdateReservaciones reservas={selectedReserva} onUpdate={handleUpdate} />
+      <Modal
+        isOpen={showModalEditReserva}
+        onClose={handleCloseModalEditReserva}
+      >
+        <UpdateReservaciones
+          reservas={selectedReserva}
+          onUpdate={handleUpdate}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={showModalEditCliente}
+        onClose={handleCloseModalWithCliente}
+      >
+        {selectedClienteId && <ClientesReservas idCliente={selectedClienteId} />}
+      </Modal>
+
+      <Modal
+        isOpen={showModalEditAutomovil}
+        onClose={handleCloseModalWithAutomovil}
+      >
+        {selectedAutomovilId && <AutomovilReservas placa={selectedAutomovilId} />}
       </Modal>
     </div>
   );
 };
+

@@ -11,7 +11,6 @@ export const useGetClienteById = (idCliente: string) => {
     setLoading(true);
     try {
       const response = await dunamisApi.get<ClientesDB[]>(`/cliente/${idCliente}`);
-      console.log('Datos obtenidos:', response.data);
       setClientes(response.data);
     } catch (err) {
       console.error('Error fetching data:', err);
