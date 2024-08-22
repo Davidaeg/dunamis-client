@@ -8,11 +8,12 @@ import ActionButtons from "../../components/ActionButtons/ActionButtons";
 import Swal from "sweetalert2";
 import CreateAutomoviles from "./CreateAutomoviles";
 import Modal from "../../components/Modal/Modal";
-import { AutomovilDB } from "./automovil.types";
+import { AutomovilDB, TipoAutoDB } from "./automovil.types";
 import { useCreateAutomovil } from "../../hooks/automoviles/useCreateAutomovil";
 import { useDeleteAutomovil } from "../../hooks/automoviles/useDeleteAutomovil";
 import { useUpdateAutomovil } from "../../hooks/automoviles/useUpdateAutomovil";
 import UpdateAutomoviles from "./UpdateAutomoviles";
+import { useCreateTipoAuto } from "../../hooks/tipoAuto/useCreateTipoAuto";
 
 export const Automovil = () => {
   const { automovil, loading, error, refetch } = useGetAutomovil();
@@ -23,6 +24,8 @@ export const Automovil = () => {
   const { createAutomovil } = useCreateAutomovil();
   const { deleteAutomovil} = useDeleteAutomovil();
   const { updateAutomovil } = useUpdateAutomovil();
+
+  const { createTipoAutomovil } = useCreateTipoAuto();
 
   const handleShowModalCreateAuto = () => setShowModalCreateAuto(true);
   const handleShowModalEditAuto = () => setShowModalEditAuto(true);
@@ -36,9 +39,10 @@ export const Automovil = () => {
     setSelectedAuto(null);
   };
 
-  const handleCreate = async (automovil: AutomovilDB) => {
+  const handleCreate = async (automovil: AutomovilDB, tipoAutomovil:TipoAutoDB) => {
     try {
       await createAutomovil(automovil);
+      await createTipoAutomovil(tipoAutomovil);
 
       Swal.fire("¡Creado!", "El Automovil ha sido creado.", "success");
       refetch();
@@ -127,6 +131,12 @@ export const Automovil = () => {
     { headerName: "Costo", field: "costo" },
     { headerName: "Disponible", field: "automovilActivo" },
     { headerName: "Segmento", field: "segmentoNombre" },
+    { 
+      headerName: "Tipo de Automóvil", 
+      field: "tipoAutomoviles", 
+      valueGetter: (params: any) => 
+        params.data.tipoAutomoviles?.map((tipo: any) => tipo.nombre).join(", ") || ""
+    },
     {
       headerName: "Acciones",
       field: "acciones",
@@ -179,7 +189,7 @@ export const Automovil = () => {
         isOpen={showModalCreateAuto}
         onClose={handleCloseModalCreateAuto}
       >
-        <CreateAutomoviles onCreate={handleCreate} />
+        <CreateAutomoviles onCreate={handleCreate}/>
       </Modal>
 
       <Modal isOpen={showModalEditAuto} onClose={handleCloseModalEditAutomovil}>

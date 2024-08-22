@@ -42,10 +42,10 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
   return (
     <section>
       <div>
-        <h2 className="ml-3 mt-3 text-xl font-bold text-gray-900 ">Actualizar persona</h2>
+        <h2 className="ml-3 mt-3 text-xl font-bold text-gray-900 ">Actualizar Cliente</h2>
         <form onSubmit={handleSubmit} className="p-4 border rounded bg-gray-100">
           <div>
-            <label htmlFor="idPersona" className="block font-medium">ID Persona</label>
+            <label htmlFor="idPersona" className="block font-medium">N° Identificación</label>
             <input
               type="text"
               id="idPersona"
@@ -153,7 +153,7 @@ const UpdatePersonas: React.FC<UpdatePersonasProps> = ({ persona, onUpdate }) =>
             <button
               type="submit"
               className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 hover:bg-blue-400">
-              Actualizar Persona
+              Actualizar Cliente
             </button>
           </div>
         </form>

@@ -556,7 +556,7 @@ const CreatePersona: React.FC<CreatePersonaProps> = ({ onCreate }) => {
                 type="submit"
                 className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-400 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900"
               >
-                Crear persona
+                Crear Cliente
               </button>
             </div>
           </div>

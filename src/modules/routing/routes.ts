@@ -5,10 +5,9 @@ import { Personas } from "../personas/Personas";
 import { Segmentos } from "../segmento/Segmento";
 import { Automovil } from "../automovil/Automovil";
 import { Reservation } from "../reservation/Reservation";
+import { Facturacion } from "../facturacion/Facturacion";
 
-
-import { FaBook, FaHouse, FaPeopleLine, FaCarRear,FaAlignCenter  } from "react-icons/fa6";
-import { GrHostMaintenance } from "react-icons/gr";
+import { FaBook, FaHouse, FaPeopleLine, FaCarRear,FaAlignCenter,FaFileInvoiceDollar  } from "react-icons/fa6";
 
 
 export const appRoutes: RouteType[] = [
@@ -20,16 +19,17 @@ export const appRoutes: RouteType[] = [
     layout: "/",
   },
   {
-    path: "/about",
-    name: "Sobre Nosotros",
-    component: About,
-    layout: "/",
-  },
-  {
     path: "/reservation",
     name: "Reservación",
     component: Reservation,
     icon: FaBook,
+    layout: "/",
+  },
+  {
+    path: "/facturacion",
+    name: "Facturación",
+    component: Facturacion,
+    icon: FaFileInvoiceDollar,
     layout: "/",
   },
   {
@@ -54,10 +54,9 @@ export const appRoutes: RouteType[] = [
     layout: "/",
   },
   {
-    path: "/automovil",
-    name: "Mantenimiento",
-    icon: GrHostMaintenance,
-    component: Automovil,
+    path: "/about",
+    name: "Sobre Nosotros",
+    component: About,
     layout: "/",
   },
 ];

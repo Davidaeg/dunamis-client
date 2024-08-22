@@ -111,6 +111,12 @@ const CreateReservaciones: React.FC<CreateReservaProps> = ({ onCreate }) => {
     { headerName: "Marca", field: "marca" },
     { headerName: "Modelo", field: "modelo" },
     { headerName: "Segmento", field: "segmentoNombre" },
+    { 
+      headerName: "Tipo", 
+      field: "tipoAutomoviles", 
+      valueGetter: (params: any) => 
+        params.data.tipoAutomoviles?.map((tipo: any) => tipo.nombre).join(", ") || ""
+    },
   ];
 
   const clienteColumns: ColDef[] = [
