@@ -13,6 +13,7 @@ import ActionButtons from "../../components/ActionButtons/ActionButtons";
 import CreateFacturacion from "./CreateFacturacion";
 import { DetalleFacturaDB, FacturacionDB } from "./factura.types";
 import { useGetDetalleFactura } from "../../hooks/detallefactura/useGetDetalleFactura";
+import { useDeleteDetalleFactura } from "../../hooks/detallefactura/useDeleteDetalleFactura";
 
 export const Facturacion = () => {
   const { detalleFactura, loading, error, refetch } = useGetDetalleFactura();
@@ -20,7 +21,7 @@ export const Facturacion = () => {
 
   const { createFactura } = useCreateFactura();
   const { createDetalleFactura } = useCreateDetalleFactura();
-  const { deleteFactura } = useDeleteFactura();
+  const { deleteDetalleFactura } = useDeleteDetalleFactura();
 
   const handleShowModalCreateFactura = () => setShowModalCreateFactura(true);
   const handleCloseModalCreateFactura = () => setShowModalCreateFactura(false);
@@ -32,7 +33,7 @@ export const Facturacion = () => {
   const handleCreate = async (facturacion: FacturacionDB, detalleFactura: DetalleFacturaDB) => {
     try {
       const createdFactura = await createFactura(facturacion);
-      const facturaId = createdFactura?.idFactura; // Asegúrate de que la respuesta contenga el ID de la factura
+      const facturaId = createdFactura?.idFactura;
   
       if (facturaId) {
         const detalleFacturaWithId = {
@@ -53,7 +54,7 @@ export const Facturacion = () => {
     }
   };
 
-  const handleDelete = (idFactura: string) => {
+  const handleDelete = (idDetalleFactura: string) => {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "No podrás revertir esto.",
@@ -65,7 +66,7 @@ export const Facturacion = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteFactura(idFactura)
+        deleteDetalleFactura(idDetalleFactura)
           .then(({ success, error }) => {
             if (success) {
               Swal.fire(
@@ -114,15 +115,15 @@ export const Facturacion = () => {
     { headerName: "Precio Km Automovil", field: "precioKmAutomovil" },
     { headerName: "Cantidad Dias", field: "cantidadDias" },
     { headerName: "Cantidad Km Recorridos", field: "cantidadKmRecorridos" },
-    { headerName: "Fecha Factura", field: "factura" },
-    { headerName: "Reserva Asociada", field: "reservacion" },
+    { headerName: "Fecha Factura", field: "facturaFecha" },
+    { headerName: "Reserva Asociada", field: "reservacionId" },
     {
       headerName: "Acciones",
       field: "acciones",
       cellRenderer: (params: any) => (
         <ActionButtons
           onEdit={() => handleEdit(params.data)}
-          onDelete={() => handleDelete(params.data.idFactura)}
+          onDelete={() => handleDelete(params.data.idDetalleFactura)}
         />
       ),
     },
@@ -146,7 +147,7 @@ export const Facturacion = () => {
               type="button"
               className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded"
             >
-              Agregar Nueva Reserva
+              Agregar Nueva Factura
             </button>
           </div>
         </div>

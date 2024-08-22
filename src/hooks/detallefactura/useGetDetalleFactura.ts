@@ -10,7 +10,7 @@ export const useGetDetalleFactura = () => {
   const fetchDetalleFactura = async () => {
     setLoading(true);
     try {
-      const response = await dunamisApi.get<DetalleFacturaDB[]>("/detalle-factura");
+      const response = await dunamisApi.get<DetalleFacturaDB[]>("/detalle-facturaDTO");
       setDetalleFactura(response.data);
       setLoading(false);
     } catch (err) {
