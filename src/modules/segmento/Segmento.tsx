@@ -117,7 +117,6 @@ export const Segmentos = () => {
   };
   
   const columns: ColDef[] = [
-    { headerName: "ID Segmento", field: "idSegmento" },
     { headerName: "Nombre del Segmento", field: "nombre" },
     {
       headerName: "Acciones",

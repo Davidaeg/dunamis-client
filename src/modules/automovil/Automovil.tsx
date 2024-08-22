@@ -131,6 +131,12 @@ export const Automovil = () => {
     { headerName: "Costo", field: "costo" },
     { headerName: "Disponible", field: "automovilActivo" },
     { headerName: "Segmento", field: "segmentoNombre" },
+    { 
+      headerName: "Tipo de Automóvil", 
+      field: "tipoAutomoviles", 
+      valueGetter: (params: any) => 
+        params.data.tipoAutomoviles?.map((tipo: any) => tipo.nombre).join(", ") || ""
+    },
     {
       headerName: "Acciones",
       field: "acciones",

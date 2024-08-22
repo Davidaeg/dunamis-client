@@ -4,13 +4,10 @@ import { useGetSegmento } from "../../hooks/segmentos/useGetSegmento";
 import { useGetTipo } from "../../hooks/tipo/useGetTipo";
 
 interface CreateAutomovilProps {
-  onCreate: (
-    automovil: AutomovilDB,
-    tipoAuto: TipoAutoDB
-  ) => void;
+  onCreate: (automovil: AutomovilDB, tipoAuto: TipoAutoDB) => void;
 }
 
-const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate}) => {
+const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
   const [automovil, setAutomovil] = useState<AutomovilDB>({
     placa: "",
     marca: "",
@@ -43,13 +40,16 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate}) => {
     const { name, value } = e.target;
     setAutomovil((prevAutomovil) => ({
       ...prevAutomovil,
-      [name]: name === "anno" || name === "idSegmento" ? parseInt(value) : name === "costo" ? parseFloat(parseFloat(value).toFixed(2)) : value,
+      [name]:
+        name === "anno" || name === "idSegmento"
+          ? parseInt(value)
+          : name === "costo"
+          ? parseFloat(parseFloat(value).toFixed(2))
+          : value,
     }));
   };
 
-  const handleTipoAutoChange = (
-    e: ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleTipoAutoChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setTipoAuto((prevTipoAuto) => ({
       ...prevTipoAuto,
@@ -57,6 +57,7 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate}) => {
       automovil: automovil.placa,
     }));
   };
+  
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -68,7 +69,7 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate}) => {
       console.log("Automovil a crear:", automovilData);
       console.log("Tipo de automovil a crear:", tipoAutomovilData);
 
-      onCreate(automovilData,tipoAutomovilData);
+      onCreate(automovilData, tipoAutomovilData);
 
       setAutomovil({
         placa: "",
@@ -332,7 +333,7 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate}) => {
                 <select
                   id="tipo"
                   name="tipo"
-                  value={TipoAuto.tipo}
+                  value={TipoAuto.tipo || 0} // Asegúrate de que 0 sea el valor inicial
                   onChange={handleTipoAutoChange}
                   className="mt-1 block w-full border rounded p-2"
                   required

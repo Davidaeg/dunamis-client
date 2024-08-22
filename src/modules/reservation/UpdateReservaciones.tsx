@@ -31,10 +31,18 @@ const UpdateReservaciones: React.FC<UpdateReservasProps> = ({
     const { name, type, checked, value } = e.target;
     const newValue = type === "checkbox" ? checked : value;
 
-    setUpdatedReserva((prevState) => ({
-      ...prevState,
-      [name]: newValue,
-    }));
+    // Convert kmFinales to number if the input field is kmFinales
+    if (name === "kmFinales") {
+      setUpdatedReserva((prevState) => ({
+        ...prevState,
+        [name]: Number(newValue), // Convert value to number
+      }));
+    } else {
+      setUpdatedReserva((prevState) => ({
+        ...prevState,
+        [name]: newValue,
+      }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -78,12 +86,12 @@ const UpdateReservaciones: React.FC<UpdateReservasProps> = ({
                 Kilometros Finales
               </label>
               <input
-                type="text"
+                type="number" // Changed to number type
                 id="kmFinales"
                 name="kmFinales"
                 value={updatedReserva.kmFinales}
                 onChange={handleChange}
-                placeholder="Color del vehiculo"
+                placeholder="Kilómetros finales"
                 className="mt-1 block w-full border rounded p-2"
                 required
               />
