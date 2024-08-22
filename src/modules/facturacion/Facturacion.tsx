@@ -29,16 +29,27 @@ export const Facturacion = () => {
 
   };
 
-  const handleCreate = async (facturacion: FacturacionDB, detalleFactura:DetalleFacturaDB) => {
+  const handleCreate = async (facturacion: FacturacionDB, detalleFactura: DetalleFacturaDB) => {
     try {
-      await createFactura(facturacion);
-      await createDetalleFactura(detalleFactura);
-      Swal.fire("¡Creado!", "La factura ha sido creada.", "success");
-      refetch();
-      handleCloseModalCreateFactura();
+      const createdFactura = await createFactura(facturacion);
+      const facturaId = createdFactura?.idFactura; // Asegúrate de que la respuesta contenga el ID de la factura
+  
+      if (facturaId) {
+        const detalleFacturaWithId = {
+          ...detalleFactura,
+          idFactura: facturaId,
+        };
+        await createDetalleFactura(detalleFacturaWithId);
+  
+        Swal.fire("¡Creado!", "La factura y su detalle han sido creados.", "success");
+        refetch();
+        handleCloseModalCreateFactura();
+      } else {
+        throw new Error("No se pudo obtener el ID de la factura creada.");
+      }
     } catch (err) {
-      console.error("Error al crear factura:", err);
-      Swal.fire("Error", "Hubo un error al crear la factura.", "error");
+      console.error("Error al crear la factura o el detalle:", err);
+      Swal.fire("Error", "Hubo un error al crear la factura o el detalle.", "error");
     }
   };
 

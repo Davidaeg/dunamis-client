@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { DetalleFacturaDB, FacturacionDB } from "./factura.types";
+import { useCreateFactura } from "../../hooks/facturacion/useCreateFactura";
 
 interface CreateFacturacionProps {
   onCreate: (
@@ -13,6 +14,8 @@ const CreateFacturacion: React.FC<CreateFacturacionProps> = ({ onCreate }) => {
     idFactura: "",
     fecha: "",
   });
+
+  const { createFactura } = useCreateFactura();
 
   const [detalleFactura, setDetalleFactura] = useState<DetalleFacturaDB>({
     idDetalleFactura: "",
@@ -44,20 +47,27 @@ const CreateFacturacion: React.FC<CreateFacturacionProps> = ({ onCreate }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+  
     try {
+      // Crear la factura
       const facturaData = { ...facturacion };
-      const detallefacturaData = { ...detalleFactura };
-
+      const createdFactura = await createFactura(facturaData); 
+  
+      const detallefacturaData = {
+        ...detalleFactura,
+        factura: Number(createdFactura.idFactura), 
+      };
+  
       console.log("Factura a crear:", facturaData);
       console.log("Detalle a crear:", detallefacturaData);
-      onCreate(facturaData, detallefacturaData);
-
+      onCreate(createdFactura, detallefacturaData);
+  
+      // Reiniciar el formulario
       setFacturacion({
         idFactura: "",
         fecha: "",
       });
-
+  
       setDetalleFactura({
         idDetalleFactura: "",
         subtotal: 0,
@@ -67,13 +77,14 @@ const CreateFacturacion: React.FC<CreateFacturacionProps> = ({ onCreate }) => {
         factura: 0,
         reservacion: 0,
       });
-
+  
       setError(null);
     } catch (error) {
       console.error("Error creando la factura:", error);
       setError("Hubo un error al crear la factura.");
     }
   };
+  
 
   return (
     <section>
@@ -97,21 +108,6 @@ const CreateFacturacion: React.FC<CreateFacturacionProps> = ({ onCreate }) => {
           <div className="space-y-4">
             <h3 className="text-lg font-bold mb-3">Datos de la Factura</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="fecha" className="block font-medium">
-                  Fecha de la factura
-                </label>
-                <input
-                  type="date"
-                  id="fecha"
-                  name="fecha"
-                  value={facturacion.fecha}
-                  onChange={handleFacturaChange}
-                  placeholder="Fecha de la factura"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
               <div>
                 <label htmlFor="subtotal" className="block font-medium">
                   Subtotal de la factura
@@ -176,21 +172,6 @@ const CreateFacturacion: React.FC<CreateFacturacionProps> = ({ onCreate }) => {
                   value={detalleFactura.cantidadKmRecorridos}
                   onChange={handleDetalleFacturaChange}
                   placeholder="Cantidad Kilómetros recorridos"
-                  className="mt-1 block w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="factura" className="block font-medium">
-                  Factura asociada
-                </label>
-                <input
-                  type="text"
-                  id="factura"
-                  name="factura"
-                  value={detalleFactura.factura}
-                  onChange={handleDetalleFacturaChange}
-                  placeholder="Factura asociada"
                   className="mt-1 block w-full border rounded p-2"
                   required
                 />
