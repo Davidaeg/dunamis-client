@@ -1,24 +1,174 @@
+import { useState } from "react";
+import { AgGridReact } from "ag-grid-react";
+import { ColDef } from "ag-grid-community";
+import { useGetFactura } from "../../hooks/facturacion/useGetFactura";
+import { useDeleteFactura } from "../../hooks/facturacion/useDeleteFactura";
+import { useCreateFactura } from "../../hooks/facturacion/useCreateFactura";
+import { useCreateDetalleFactura } from "../../hooks/detallefactura/useCreateDetalleFactura";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
+import Modal from "../../components/Modal/Modal";
+import Swal from "sweetalert2";
+import ActionButtons from "../../components/ActionButtons/ActionButtons";
+import CreateFacturacion from "./CreateFacturacion";
+import { DetalleFacturaDB, FacturacionDB } from "./factura.types";
+import { useGetDetalleFactura } from "../../hooks/detallefactura/useGetDetalleFactura";
+
 export const Facturacion = () => {
+  const { detalleFactura, loading, error, refetch } = useGetDetalleFactura();
+  const [showModalCreateFactura, setShowModalCreateFactura] = useState(false);
+
+  const { createFactura } = useCreateFactura();
+  const { createDetalleFactura } = useCreateDetalleFactura();
+  const { deleteFactura } = useDeleteFactura();
+
+  const handleShowModalCreateFactura = () => setShowModalCreateFactura(true);
+  const handleCloseModalCreateFactura = () => setShowModalCreateFactura(false);
+
+  const handleEdit = (facturacion: any) => {
+
+  };
+
+  const handleCreate = async (facturacion: FacturacionDB, detalleFactura:DetalleFacturaDB) => {
+    try {
+      await createFactura(facturacion);
+      await createDetalleFactura(detalleFactura);
+      Swal.fire("¡Creado!", "La factura ha sido creada.", "success");
+      refetch();
+      handleCloseModalCreateFactura();
+    } catch (err) {
+      console.error("Error al crear factura:", err);
+      Swal.fire("Error", "Hubo un error al crear la factura.", "error");
+    }
+  };
+
+  const handleDelete = (idFactura: string) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esto.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteFactura(idFactura)
+          .then(({ success, error }) => {
+            if (success) {
+              Swal.fire(
+                "¡Eliminado!",
+                "La factura ha sido eliminada.",
+                "success"
+              );
+              refetch();
+            } else if (error) {
+              Swal.fire("Error", error, "error");
+            }
+          })
+          .catch((err: any) => {
+            console.error("Error al eliminar la factura:", err);
+            Swal.fire(
+              "Error",
+              "Hubo un error al eliminar la factura.",
+              "error"
+            );
+          });
+      }
+    });
+  };
+
+  // const handleUpdate = (idReservacion: string, reservas: DetalleFacturaDB) => {
+  //   updateReservacion(idReservacion, reservas)
+  //     .then((updatedReserva) => {
+  //       console.log("Reserva actualizada", updatedReserva);
+  //       Swal.fire(
+  //         "¡Actualizado!",
+  //         "La reserva ha sido actualizada.",
+  //         "success"
+  //       );
+  //       refetch();
+  //       handleCloseModalEditReserva();
+  //     })
+  //     .catch((err: any) => {
+  //       console.error("Error al actualizar reserva:", err);
+  //       Swal.fire("Error", "Hubo un error al actualizar la reserva.", "error");
+  //     });
+  // };
+
+  const columns: ColDef[] = [
+    { headerName: "ID Detalle Factura", field: "idDetalleFactura" },
+    { headerName: "Subtotal", field: "subtotal" },
+    { headerName: "Precio Km Automovil", field: "precioKmAutomovil" },
+    { headerName: "Cantidad Dias", field: "cantidadDias" },
+    { headerName: "Cantidad Km Recorridos", field: "cantidadKmRecorridos" },
+    { headerName: "Fecha Factura", field: "factura" },
+    { headerName: "Reserva Asociada", field: "reservacion" },
+    {
+      headerName: "Acciones",
+      field: "acciones",
+      cellRenderer: (params: any) => (
+        <ActionButtons
+          onEdit={() => handleEdit(params.data)}
+          onDelete={() => handleDelete(params.data.idFactura)}
+        />
+      ),
+    },
+  ];
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
-    <div className="container mx-auto p-6 bg-gray-100">
-      <header className="bg-blue-500 text-white p-4 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold">DUNAMIS S.A.</h1>
-        <p className="text-xl mt-2">Sistema Integral de Gestión de Reservas de Automóviles</p>
-      </header>
-      
-      <section className="mt-6 p-4 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Introducción</h2>
-        <p className="text-gray-700">
-          En la era digital actual, las empresas deben adaptarse y aprovechar las tecnologías disponibles para optimizar sus operaciones y mejorar la eficiencia. DUNAMIS S.A., una empresa dedicada al alquiler de automóviles ha reconocido la necesidad de modernizar sus procesos para mantenerse competitiva en el mercado. Tradicionalmente, la gestión de sus vehículos, reservas y facturación se ha llevado a cabo de manera manual, lo que ha resultado en ineficiencias y dificultades en el seguimiento de sus operaciones.
-        </p>
-        <p className="mt-4 text-gray-700">
-          Este documento presenta el desarrollo de un sistema integral de renta de automóviles que aborda estas problemáticas mediante la automatización y digitalización de los procesos clave. El sistema propuesto incluye módulos para la gestión de automóviles, reservas, emisión de facturas, consultas y reportes, todos diseñados para mejorar la precisión y eficiencia operativa de DUNAMIS S.A.
-        </p>
-        <p className="mt-4 text-gray-700">
-          A través de un análisis detallado de los requisitos del cliente y la implementación de estándares como el ISO 3833:1977 para la clasificación de vehículos, el sistema no solo optimiza los procesos internos, sino que también asegura una experiencia de usuario mejorada para los clientes de la empresa. La implementación de este sistema no solo permitirá un control más riguroso y eficiente de los recursos de DUNAMIS S.A., sino que también proporcionará una base sólida para futuras expansiones y mejoras tecnológicas.
-        </p>
-      </section>
+    <div>
+      <div className="bg-white dark:bg-gray-200 relative shadow-md overflow-hidden">
+        <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+          <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+            <button
+              onClick={handleShowModalCreateFactura}
+              type="button"
+              className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded"
+            >
+              Agregar Nueva Reserva
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="ag-theme-quartz" style={{ height: 600, width: "100%" }}>
+        <AgGridReact
+          rowData={detalleFactura}
+          columnDefs={columns}
+          defaultColDef={{
+            sortable: true,
+            filter: true,
+            resizable: true,
+            flex: 1,
+          }}
+        />
+      </div>
+
+      <Modal
+        isOpen={showModalCreateFactura}
+        onClose={handleCloseModalCreateFactura}
+      >
+        <CreateFacturacion onCreate={handleCreate} />
+      </Modal>
+
+      {/* <Modal
+        isOpen={showModalEditReserva}
+        onClose={handleCloseModalEditReserva}
+      >
+        <UpdateReservaciones
+          reservas={selectedReserva}
+          onUpdate={handleUpdate}
+        />
+      </Modal> */}
     </div>
   );
 };
-
