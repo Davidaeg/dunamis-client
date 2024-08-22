@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { AutomovilDB, TipoAutoDB } from "./automovil.types";
 import { useGetSegmento } from "../../hooks/segmentos/useGetSegmento";
 import { useGetTipo } from "../../hooks/tipo/useGetTipo";
@@ -34,6 +34,13 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
   const { segmento, loading, error } = useGetSegmento();
   const { tipoCarro, loading: Load, error: Err } = useGetTipo();
 
+  useEffect(() => {
+    setTipoAuto((prevTipoAuto) => ({
+      ...prevTipoAuto,
+      automovil: automovil.placa,
+    }));
+  }, [automovil.placa]);
+
   const handleAutomovilChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -53,11 +60,9 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
     const { name, value } = e.target;
     setTipoAuto((prevTipoAuto) => ({
       ...prevTipoAuto,
-      [name]: parseInt(value, 10),
-      automovil: automovil.placa,
+      [name]: name === "tipo" ? parseInt(value, 10) : value,
     }));
   };
-  
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -333,12 +338,12 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
                 <select
                   id="tipo"
                   name="tipo"
-                  value={TipoAuto.tipo || 0} // Asegúrate de que 0 sea el valor inicial
+                  value={TipoAuto.tipo || ""} // Asegúrate de que "" sea el valor inicial adecuado
                   onChange={handleTipoAutoChange}
                   className="mt-1 block w-full border rounded p-2"
                   required
                 >
-                  <option value={0} disabled>
+                  <option value="" disabled>
                     Seleccione un tipo
                   </option>
                   {tipoCarro.map((tipo) => (

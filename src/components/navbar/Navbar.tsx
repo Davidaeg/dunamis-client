@@ -59,7 +59,7 @@ export const Navbar = () => {
                                 : "text-gray-700"
                             }`}
                           >
-                            Personas
+                            Clientes
                           </Link>
                         )}
                       </Menu.Item>

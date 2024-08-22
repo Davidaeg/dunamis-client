@@ -190,7 +190,7 @@ export const Personas = () => {
   };
 
   const columns: ColDef[] = [
-    { headerName: "ID", field: "idPersona" },
+    { headerName: "N° Identificación", field: "idPersona" },
     { headerName: "Nombre", field: "nombre" },
     { headerName: "Primer Apellido", field: "apellido1" },
     { headerName: "Segundo Apellido", field: "apellido2" },
@@ -270,7 +270,7 @@ export const Personas = () => {
               type="button"
               className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded"
             >
-              Agregar Persona
+              Agregar Cliente
             </button>
           </div>
         </div>

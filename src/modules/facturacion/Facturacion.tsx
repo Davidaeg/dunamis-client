@@ -91,23 +91,6 @@ export const Facturacion = () => {
     });
   };
 
-  // const handleUpdate = (idReservacion: string, reservas: DetalleFacturaDB) => {
-  //   updateReservacion(idReservacion, reservas)
-  //     .then((updatedReserva) => {
-  //       console.log("Reserva actualizada", updatedReserva);
-  //       Swal.fire(
-  //         "¡Actualizado!",
-  //         "La reserva ha sido actualizada.",
-  //         "success"
-  //       );
-  //       refetch();
-  //       handleCloseModalEditReserva();
-  //     })
-  //     .catch((err: any) => {
-  //       console.error("Error al actualizar reserva:", err);
-  //       Swal.fire("Error", "Hubo un error al actualizar la reserva.", "error");
-  //     });
-  // };
 
   const columns: ColDef[] = [
     { headerName: "ID Detalle Factura", field: "idDetalleFactura" },
@@ -116,7 +99,7 @@ export const Facturacion = () => {
     { headerName: "Cantidad Dias", field: "cantidadDias" },
     { headerName: "Cantidad Km Recorridos", field: "cantidadKmRecorridos" },
     { headerName: "Fecha Factura", field: "facturaFecha" },
-    { headerName: "Reserva Asociada", field: "reservacionId" },
+    { headerName: "N° Reserva Asociada", field: "reservacionId" },
     {
       headerName: "Acciones",
       field: "acciones",
@@ -171,16 +154,6 @@ export const Facturacion = () => {
       >
         <CreateFacturacion onCreate={handleCreate} />
       </Modal>
-
-      {/* <Modal
-        isOpen={showModalEditReserva}
-        onClose={handleCloseModalEditReserva}
-      >
-        <UpdateReservaciones
-          reservas={selectedReserva}
-          onUpdate={handleUpdate}
-        />
-      </Modal> */}
     </div>
   );
 };
