@@ -20,3 +20,14 @@ export interface AutomovilDB {
   automovilActivo: boolean;
   idSegmento:number;
 }
+
+export interface TipoDB {
+  idTipo: string;
+  nombre: string;
+}
+
+export interface TipoAutoDB {
+  id: string;
+  tipo: string;
+  automovil: string;
+}

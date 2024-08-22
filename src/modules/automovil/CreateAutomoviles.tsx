@@ -1,12 +1,16 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { AutomovilDB } from "./automovil.types";
+import { AutomovilDB, TipoAutoDB } from "./automovil.types";
 import { useGetSegmento } from "../../hooks/segmentos/useGetSegmento";
+import { useGetTipo } from "../../hooks/tipo/useGetTipo";
 
 interface CreateAutomovilProps {
-  onCreate: (automovil: AutomovilDB) => void;
+  onCreate: (
+    automovil: AutomovilDB,
+    tipoAuto: TipoAutoDB
+  ) => void;
 }
 
-const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
+const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate}) => {
   const [automovil, setAutomovil] = useState<AutomovilDB>({
     placa: "",
     marca: "",
@@ -24,7 +28,14 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
     idSegmento: 0,
   });
 
-  const { segmento, loading, error} = useGetSegmento();
+  const [TipoAuto, setTipoAuto] = useState<TipoAutoDB>({
+    id: "",
+    tipo: "",
+    automovil: "",
+  });
+
+  const { segmento, loading, error } = useGetSegmento();
+  const { tipoCarro, loading: Load, error: Err } = useGetTipo();
 
   const handleAutomovilChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -32,14 +43,18 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
     const { name, value } = e.target;
     setAutomovil((prevAutomovil) => ({
       ...prevAutomovil,
-      [name]:
-        name === "anno"
-          ? parseInt(value)
-          : name === "costo"
-          ? parseFloat(parseFloat(value).toFixed(2))
-          : name === "idSegmento"
-          ? parseInt(value)
-          : value,
+      [name]: name === "anno" || name === "idSegmento" ? parseInt(value) : name === "costo" ? parseFloat(parseFloat(value).toFixed(2)) : value,
+    }));
+  };
+
+  const handleTipoAutoChange = (
+    e: ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setTipoAuto((prevTipoAuto) => ({
+      ...prevTipoAuto,
+      [name]: parseInt(value, 10),
+      automovil: automovil.placa,
     }));
   };
 
@@ -48,9 +63,12 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
 
     try {
       const automovilData = { ...automovil };
+      const tipoAutomovilData = { ...TipoAuto };
 
       console.log("Automovil a crear:", automovilData);
-      onCreate(automovilData);
+      console.log("Tipo de automovil a crear:", tipoAutomovilData);
+
+      onCreate(automovilData,tipoAutomovilData);
 
       setAutomovil({
         placa: "",
@@ -68,19 +86,24 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
         automovilActivo: true,
         idSegmento: 0,
       });
+
+      setTipoAuto({
+        id: "",
+        tipo: "",
+        automovil: "",
+      });
     } catch (error) {
       console.error("Error creando automovil:", error);
     }
   };
 
-  if (loading) {
-    console.log("Cargando segmentos...");
-    return null;
+  if (loading || Load) {
+    return <p>Cargando segmentos y tipos...</p>;
   }
 
-  if (error) {
-    console.error("Error al cargar segmentos:");
-    return null;
+  if (error || Err) {
+    console.error("Error al cargar segmentos o tipos:");
+    return <p>Error al cargar los datos.</p>;
   }
 
   return (
@@ -298,6 +321,28 @@ const CreateAutomoviles: React.FC<CreateAutomovilProps> = ({ onCreate }) => {
                       value={segmento.idSegmento}
                     >
                       {segmento.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="tipo" className="block font-medium">
+                  Tipo de Automovil
+                </label>
+                <select
+                  id="tipo"
+                  name="tipo"
+                  value={TipoAuto.tipo}
+                  onChange={handleTipoAutoChange}
+                  className="mt-1 block w-full border rounded p-2"
+                  required
+                >
+                  <option value={0} disabled>
+                    Seleccione un tipo
+                  </option>
+                  {tipoCarro.map((tipo) => (
+                    <option key={tipo.idTipo} value={tipo.idTipo}>
+                      {tipo.nombre}
                     </option>
                   ))}
                 </select>
